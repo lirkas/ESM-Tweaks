@@ -1,0 +1,299 @@
+package lirkas.esmtweaks.ai;
+
+import java.util.List;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldServer;
+
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
+
+import funwayguy.epicsiegemod.ai.utils.AiUtils;
+import funwayguy.epicsiegemod.config.props.CfgProps;
+
+import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.config.ModConfig;
+import lirkas.esmtweaks.util.HarvestUtil;
+
+/**
+ * The AI for digging entities (Zombies, etc...).
+ * Modified version of funwayguy.epicsiegemod.ai.ESM_EntityAIDigging (v13.169).
+ */
+public class AltEntityAIDigging extends EntityAIBase {
+
+	private EntityLivingBase target;
+    private EntityLiving digger;
+    private BlockPos curBlock;
+    private int scanTick = 0;
+    private int digTick = 0;
+    private BlockPos obsPos = null;
+    private int obsTick = 0;
+    private int pauseIterations = 20;
+
+    private boolean canHarvest = false;
+    private IBlockState previousBlockState = null; 
+
+
+	public AltEntityAIDigging(EntityLiving digger) {
+        this.digger = digger;
+	}
+	
+	@Override
+	public boolean shouldExecute() {
+
+        ESMTweaks.logger.debug("shouldExecute");
+
+		this.target = this.digger.getAttackTarget();
+        if (this.target == null || !this.target.isEntityAlive() || !this.digger.getNavigator().noPath()) {
+            return false;
+        }
+        double dist = this.digger.getDistanceSq((Entity)this.target);
+        double navDist = this.digger.getNavigator().getPathSearchRange();
+
+        if (dist < 1.0 || dist > navDist * navDist) {
+            return false;
+        }
+        if (this.obsPos == null) {
+            this.obsPos = this.digger.getPosition();
+        }
+        if (!this.obsPos.equals((Object)this.digger.getPosition())) {
+            this.obsTick = 0;
+            this.obsPos = null;
+            return false;
+        }
+        if (++this.obsTick < this.pauseIterations) {
+            return false;
+        }
+        this.curBlock = 
+            this.curBlock != null && this.digger.getDistanceSq(this.curBlock) <= 16.0 && this.canHarvestBlock(this.curBlock) ? 
+            this.curBlock : this.getNextBlock(this.digger, this.target, 2.0);
+
+        return this.curBlock != null;
+	}
+	
+	@Override
+	public void startExecuting() {
+
+        ESMTweaks.logger.debug("startExecuting");
+		super.startExecuting();
+		digger.getNavigator().clearPath();
+		this.obsTick = 0;
+        this.obsPos = null;
+	}
+
+	@Override
+	public void resetTask() {
+
+        ESMTweaks.logger.debug("resetTask");
+
+        if(this.curBlock != null) {
+            // this remove the breaking texture if the entity stops breaking for any reason
+            this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, -1);
+        }
+        
+		this.curBlock = null;
+        this.digTick = 0;
+        this.obsTick = 0;
+        this.obsPos = null;
+        this.canHarvest = false;
+        this.previousBlockState = null;
+	}
+	
+	@Override
+	public boolean shouldContinueExecuting() {
+
+        ESMTweaks.logger.debug("shouldContinueExecuting");
+
+        if(this.target == null || this.curBlock == null || 
+            this.digger.getDistanceSq(this.curBlock) > 16.0 || !this.canHarvest || 
+            this.digger.world.getBlockState(this.curBlock) != this.previousBlockState) {
+                return false;
+        }
+
+        return true;
+	}
+	
+	@Override
+	public void updateTask() {
+
+        ESMTweaks.logger.debug("updateTask");
+
+		digger.getLookHelper().setLookPosition(
+            target.posX, target.posY + (double)target.getEyeHeight(), 
+            target.posZ, (float)digger.getHorizontalFaceSpeed(), 
+            (float)digger.getVerticalFaceSpeed());
+		digger.getNavigator().clearPath();
+		
+		digTick++;
+
+        float str = AiUtils.getBlockStrength(this.digger, this.digger.world, this.curBlock) * ((float)this.digTick + 1.0f);
+		ItemStack heldItem = digger.getHeldItem(EnumHand.MAIN_HAND);
+		IBlockState state = digger.world.getBlockState(curBlock);
+		
+        this.previousBlockState = state;
+
+		if(digger.world.isAirBlock(curBlock)) {
+			this.resetTask();
+		}
+        else if(str >= 1F) { // Block has been broken.
+
+			// boolean canHarvest = state.getMaterial().isToolNotRequired() || (!heldItem.isEmpty() && heldItem.canHarvestBlock(state));
+            boolean canHarvest = this.canHarvest;
+
+			digger.world.destroyBlock(curBlock, false);
+
+            if (canHarvest && this.digger.world instanceof WorldServer) {
+                // should ideally get rid of FakePlayer stuffs, but need to figure out what all this does
+                // and if another way of achieving this is possible (Forge docs says FakePlayer may cause world leaking issue)
+                FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)((WorldServer)this.digger.world));
+                player.setHeldItem(EnumHand.MAIN_HAND, heldItem);
+                player.setHeldItem(EnumHand.OFF_HAND, this.digger.getHeldItem(EnumHand.OFF_HAND));
+                player.setPosition((double)this.digger.getPosition().getX(), (double)this.digger.getPosition().getY(), (double)this.digger.getPosition().getZ());
+                TileEntity tile = this.digger.world.getTileEntity(this.curBlock);
+                state.getBlock().harvestBlock(this.digger.world, (EntityPlayer)player, this.curBlock, state, tile, heldItem);
+            }
+
+            digger.getNavigator().setPath(digger.getNavigator().getPathToEntityLiving(target), digger.getMoveHelper().getSpeed()); // This is fine. We only run it after a block breaks
+			this.resetTask();
+		} 
+        else if(digTick % 5 == 0) { // Just keeping digging...
+
+			digger.world.playSound(null, curBlock, state.getBlock().getSoundType(state, digger.world, curBlock, digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
+			digger.swingArm(EnumHand.MAIN_HAND);
+			digger.world.sendBlockBreakProgress(digger.getEntityId(), curBlock, (int)(str * 10F));
+		}
+	}
+	
+	public BlockPos getNextBlock(EntityLiving entityLiving, EntityLivingBase target, double dist) {
+
+        ESMTweaks.logger.debug("getNextBlock");
+
+        int digWidth = MathHelper.ceil(entityLiving.width);
+        int digHeight = MathHelper.ceil(entityLiving.height);
+
+        int passMax = digWidth * digWidth * digHeight;
+        if (passMax <= 0) {
+            return null;
+        }
+        int y = this.scanTick % digHeight;
+        int x = this.scanTick % (digWidth * digHeight) / digHeight;
+        int z = this.scanTick / (digWidth * digHeight);
+
+        double rayX = (double)x + Math.floor(entityLiving.posX) + 0.5 - (double)digWidth / 2.0;
+        double rayY = (double)y + Math.floor(entityLiving.posY) + 0.5;
+        double rayZ = (double)z + Math.floor(entityLiving.posZ) + 0.5 - (double)digWidth / 2.0;
+
+        Vec3d rayOrigin = new Vec3d(rayX, rayY, rayZ);
+        Vec3d rayOffset = new Vec3d(
+			Math.floor(target.posX) + 0.5, 
+			Math.floor(target.posY) + 0.5, 
+			Math.floor(target.posZ) + 0.5
+		);
+        rayOffset.add((double)x - (double)digWidth / 2.0, (double)y, (double)z - (double)digWidth / 2.0);
+        Vec3d norm = rayOffset.subtract(rayOrigin).normalize(); // unsure about subtract (could be add)
+
+        if (Math.abs(norm.x) == Math.abs(norm.z) && norm.x != 0.0) {
+            norm = new Vec3d(norm.x, norm.y, 0.0).normalize();
+        }
+        rayOffset = rayOrigin.add(norm.scale(dist)); // unsure about add (could be subtract)
+        
+		BlockPos p1 = entityLiving.getPosition();
+		BlockPos p2 = target.getPosition();
+
+        if (p1.getDistance(p2.getX(), p1.getY(), p2.getZ()) < 4.0) {
+            
+            if ((double)(p2.getY() - p1.getY()) > 2.0) {
+                rayOffset = rayOrigin.add(0.0, dist, 0.0);
+            } 
+            else if ((double)(p2.getY() - p1.getY()) < -2.0) {
+                rayOffset = rayOrigin.add(0.0, -dist, 0.0);
+            }
+        }
+        RayTraceResult ray = entityLiving.world.rayTraceBlocks(rayOrigin, rayOffset, false, true, false);
+        this.scanTick = (this.scanTick + 1) % passMax;
+		
+        if (ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK) {
+            BlockPos pos = ray.getBlockPos();
+            IBlockState state = entityLiving.world.getBlockState(pos);
+            // could remove the right side of this AND condition after some verification and testing,
+            // since the same check is done inside canHarvest()
+            if (this.canHarvest(entityLiving, pos) && ((List)CfgProps.DIG_BL.get((Entity)entityLiving)).contains(state.getBlock().getRegistryName().toString()) == ((Boolean)CfgProps.DIG_BL_INV.get((Entity)entityLiving)).booleanValue()) {
+                return pos;
+            }
+        }
+        return null;
+	}
+
+	public boolean canHarvestBlock(BlockPos pos) {
+
+        IBlockState blockState = this.digger.world.getBlockState(pos);
+
+        ItemStack mainHandItem = this.digger.getHeldItem(EnumHand.MAIN_HAND);
+        if(HarvestUtil.canBreakWithItem(mainHandItem, blockState)) {
+            return true;
+        }
+
+        if(ModConfig.AI.shouldCheckBothHands) {
+            ItemStack offHandItem = this.digger.getHeldItem(EnumHand.OFF_HAND);
+            if(HarvestUtil.canBreakWithItem(offHandItem, blockState)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+	public boolean canHarvest(EntityLiving entity, BlockPos pos) {
+
+        ESMTweaks.logger.debug("canHarvest");
+        
+        IBlockState state = entity.world.getBlockState(pos);
+        
+        // The block is blacklisted or not whitelisted for digging 
+        // (only works if the list is defined under the entity tag in the config)
+        if(CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
+            !CfgProps.DIG_BL_INV.get(this.digger)) {
+
+            this.canHarvest = false;
+            return this.canHarvest;
+        }
+
+        if(!state.getMaterial().isSolid()) {
+
+            this.canHarvest = false;
+            return this.canHarvest;
+        }
+
+        // If "Requires Tools" == true in esm ai config, 
+        // then the mob ignore tool and level harvest restrictions
+        if(!CfgProps.DIG_TOOLS.get(entity)) {
+
+            this.canHarvest = true;
+            return this.canHarvest;
+        }
+
+        // If the mob will respect block breaking properties 
+        // (tool and harvest level restriction) else they will be able to harvest
+        // almost every block by hand
+        if(ModConfig.AI.mustHaveCorrectTool){
+            this.canHarvest = canHarvestBlock(pos);
+        }
+        else {
+            this.canHarvest = true;
+        }
+        
+        return this.canHarvest;
+	}
+}

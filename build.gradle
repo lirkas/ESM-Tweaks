@@ -1,0 +1,81 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url = "https://maven.minecraftforge.net/" }
+	}
+	
+	dependencies {
+		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "2.3-SNAPSHOT"
+	}
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+apply plugin: "java"
+apply plugin: "eclipse"
+
+version = "${modVersion}"
+group = "${group}"
+archivesBaseName = "${modID}"
+
+sourceCompatibility = '1.8'
+targetCompatibility = sourceCompatibility
+compileJava.sourceCompatibility = sourceCompatibility
+compileJava.targetCompatibility = targetCompatibility
+
+minecraft {
+    mappings = "${mcpMappings}"
+    version = "${minecraftVersion}-${forgeVersionFG2Latest}"
+    runDir = "run"
+}
+
+repositories {
+    maven { 
+        url "https://cursemaven.com"
+    }
+}
+
+dependencies {
+    deobfCompile "curse.maven:tool-progression-266550:3270468"
+    compile "curse.maven:epic-siege-mod-229449:3356157"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    //inputs.property "version", project.modVersion
+    //inputs.property "mcversion", project.modVersion
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace ${variable} fields in the file
+        // this must be done in the same expand() ?
+        expand(
+            'modVersion':project.modVersion,
+            'minecraftVersion':project.minecraftVersion
+        )
+    }
+
+    //copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+// https://github.com/seppukudevelopment/seppuku/issues/16
+// Apparently makes it so the mod resources are detected by forge when minecraft is run via gradle
+// but it messes up regular build until this is disabled and the "build" folder is removed
+//
+// if (buildmode.equals("IDE")) { 
+//     sourceSets { 
+//         main { 
+//             output.resourcesDir = output.classesDir 
+//         } 
+//     } 
+// } 
+
+// Fix and explanation about for assets download failure when launching minecraft from gradle task
+// https://naruyoko.github.io/website/oldForgeGradleAssets400.html

@@ -1,0 +1,18 @@
+[ 
+  {
+    "modid": "esmtweaks",
+    "name": "Epic Siege Mod Tweaks",
+    "description": "Implements changes to ESM AI to improve compatibility.",
+    "version": "${modVersion}",
+    "mcversion": "${minecraftVersion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["lirkas"],
+    "credits": "Yes",
+    "logoFile": "",
+    "screenshots": [],
+    "useDependencyInformation": true,
+    "requiredMods": ["epicsiegemod"],
+    "dependencies": ["epicsiegemod", "toolprogression"]
+  }
+]
