@@ -46,6 +46,7 @@ The texture is properly updated if the mob stops breaking a block for any reason
 [**TOP**] [FIX] Make mobs stop breaking the block when hit or moved.<br>
 
 [**MED**] [FIX] Make the config toggle for mobRespectMiningTier work.<br>
+[**MED**] [FEAT] Make gradle remove logger.debug lines when buliding .jar dist.<br>
 
 [**LOW**] [FEAT] Add a config toogle to get back the pickaxe chance on spawn.<br>
 [**LOW**] [FEAT] Make the pickaxe chance on spawn configurable if enabled.<br>
