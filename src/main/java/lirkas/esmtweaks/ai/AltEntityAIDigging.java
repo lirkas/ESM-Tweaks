@@ -20,7 +20,7 @@ import net.minecraft.world.WorldServer;
 
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import funwayguy.epicsiegemod.ai.utils.AiUtils;
 import funwayguy.epicsiegemod.config.props.CfgProps;
 
@@ -41,10 +41,10 @@ public class AltEntityAIDigging extends EntityAIBase {
     private int digTick = 0;
     private BlockPos obsPos = null;
     private int obsTick = 0;
-    private int pauseIterations = 20;
+    private int pauseIterations = 20; //could add a config option to edit this
 
     private boolean canHarvest = false;
-    private IBlockState previousBlockState = null; 
+    private IBlockState previousBlockState = null; //? is this really needed
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
@@ -78,8 +78,8 @@ public class AltEntityAIDigging extends EntityAIBase {
             return false;
         }
         this.curBlock = 
-            this.curBlock != null && this.digger.getDistanceSq(this.curBlock) <= 16.0 && this.canHarvestBlock(this.curBlock) ? 
-            this.curBlock : this.getNextBlock(this.digger, this.target, 2.0);
+            this.curBlock != null && this.digger.getDistanceSq(this.curBlock) <= 16.0 && this.canHarvest(this.curBlock) ? 
+            this.curBlock : this.getNextBlock(this.target, 2.0);
 
         return this.curBlock != null;
 	}
@@ -101,6 +101,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         if(this.curBlock != null) {
             // this remove the breaking texture if the entity stops breaking for any reason
+            // also gets the block back to its original unbroken state
             this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, -1);
         }
         
@@ -130,6 +131,16 @@ public class AltEntityAIDigging extends EntityAIBase {
 	public void updateTask() {
 
         ESMTweaks.logger.debug("updateTask");
+
+        // this only works when the task receives an update after the mob dies
+        // which does not happen by default
+        if(!this.digger.isEntityAlive()) {
+
+            ESMTweaks.logger.debug("  isDead");
+            this.resetTask();
+
+            return;
+        }
 
 		digger.getLookHelper().setLookPosition(
             target.posX, target.posY + (double)target.getEyeHeight(), 
@@ -177,12 +188,12 @@ public class AltEntityAIDigging extends EntityAIBase {
 		}
 	}
 	
-	public BlockPos getNextBlock(EntityLiving entityLiving, EntityLivingBase target, double dist) {
+	public BlockPos getNextBlock(EntityLivingBase target, double dist) {
 
         ESMTweaks.logger.debug("getNextBlock");
 
-        int digWidth = MathHelper.ceil(entityLiving.width);
-        int digHeight = MathHelper.ceil(entityLiving.height);
+        int digWidth = MathHelper.ceil(this.digger.width);
+        int digHeight = MathHelper.ceil(this.digger.height);
 
         int passMax = digWidth * digWidth * digHeight;
         if (passMax <= 0) {
@@ -192,9 +203,9 @@ public class AltEntityAIDigging extends EntityAIBase {
         int x = this.scanTick % (digWidth * digHeight) / digHeight;
         int z = this.scanTick / (digWidth * digHeight);
 
-        double rayX = (double)x + Math.floor(entityLiving.posX) + 0.5 - (double)digWidth / 2.0;
-        double rayY = (double)y + Math.floor(entityLiving.posY) + 0.5;
-        double rayZ = (double)z + Math.floor(entityLiving.posZ) + 0.5 - (double)digWidth / 2.0;
+        double rayX = (double)x + Math.floor(this.digger.posX) + 0.5 - (double)digWidth / 2.0;
+        double rayY = (double)y + Math.floor(this.digger.posY) + 0.5;
+        double rayZ = (double)z + Math.floor(this.digger.posZ) + 0.5 - (double)digWidth / 2.0;
 
         Vec3d rayOrigin = new Vec3d(rayX, rayY, rayZ);
         Vec3d rayOffset = new Vec3d(
@@ -210,7 +221,7 @@ public class AltEntityAIDigging extends EntityAIBase {
         }
         rayOffset = rayOrigin.add(norm.scale(dist)); // unsure about add (could be subtract)
         
-		BlockPos p1 = entityLiving.getPosition();
+		BlockPos p1 = this.digger.getPosition();
 		BlockPos p2 = target.getPosition();
 
         if (p1.getDistance(p2.getX(), p1.getY(), p2.getZ()) < 4.0) {
@@ -222,20 +233,37 @@ public class AltEntityAIDigging extends EntityAIBase {
                 rayOffset = rayOrigin.add(0.0, -dist, 0.0);
             }
         }
-        RayTraceResult ray = entityLiving.world.rayTraceBlocks(rayOrigin, rayOffset, false, true, false);
+        RayTraceResult ray = this.digger.world.rayTraceBlocks(rayOrigin, rayOffset, false, true, false);
         this.scanTick = (this.scanTick + 1) % passMax;
 		
         if (ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK) {
             BlockPos pos = ray.getBlockPos();
-            IBlockState state = entityLiving.world.getBlockState(pos);
+            IBlockState state = this.digger.world.getBlockState(pos);
             // could remove the right side of this AND condition after some verification and testing,
             // since the same check is done inside canHarvest()
-            if (this.canHarvest(entityLiving, pos) && ((List)CfgProps.DIG_BL.get((Entity)entityLiving)).contains(state.getBlock().getRegistryName().toString()) == ((Boolean)CfgProps.DIG_BL_INV.get((Entity)entityLiving)).booleanValue()) {
+            if (this.canHarvest(pos) && ((List)CfgProps.DIG_BL.get((Entity)this.digger)).contains(state.getBlock().getRegistryName().toString()) == ((Boolean)CfgProps.DIG_BL_INV.get((Entity)this.digger)).booleanValue()) {
                 return pos;
             }
         }
         return null;
 	}
+
+    /**
+     * Orginal canHarvest method from ESM, besides the removal of EntityLiving argument.
+     */
+    public boolean originalCanHarvest(BlockPos pos) {
+
+        IBlockState state = this.digger.world.getBlockState(pos);
+        if (!state.getMaterial().isSolid() || state.getBlockHardness(this.digger.world, pos) < 0.0f) {
+            return false;
+        }
+        if (state.getMaterial().isToolNotRequired() || !((Boolean)CfgProps.DIG_TOOLS.get((Entity)this.digger)).booleanValue()) {
+            return true;
+        }
+        ItemStack held = this.digger.getHeldItem(EnumHand.MAIN_HAND);
+
+        return !held.isEmpty() && held.getItem().canHarvestBlock(state, held);
+    }
 
 	public boolean canHarvestBlock(BlockPos pos) {
 
@@ -255,12 +283,26 @@ public class AltEntityAIDigging extends EntityAIBase {
         return false;
     }
 
-	public boolean canHarvest(EntityLiving entity, BlockPos pos) {
+	public boolean canHarvest(BlockPos pos) {
+
+        // Original check handler
+        if(ModConfig.AI.useESMDefaultHarvestCheck) {
+
+            this.canHarvest = this.originalCanHarvest(pos);
+            return this.canHarvest;
+        }
 
         ESMTweaks.logger.debug("canHarvest");
+
+        IBlockState state = this.digger.world.getBlockState(pos);
         
-        IBlockState state = entity.world.getBlockState(pos);
-        
+        // If the block should not be broken due to its properties
+        if(HarvestUtil.isBlockUnbreakable(state)) {
+            
+            this.canHarvest = false;
+            return this.canHarvest;
+        }
+
         // The block is blacklisted or not whitelisted for digging 
         // (only works if the list is defined under the entity tag in the config)
         if(CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
@@ -278,7 +320,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         // If "Requires Tools" == true in esm ai config, 
         // then the mob ignore tool and level harvest restrictions
-        if(!CfgProps.DIG_TOOLS.get(entity)) {
+        if(!CfgProps.DIG_TOOLS.get(this.digger)) {
 
             this.canHarvest = true;
             return this.canHarvest;
@@ -296,4 +338,14 @@ public class AltEntityAIDigging extends EntityAIBase {
         
         return this.canHarvest;
 	}
+
+    // This should be moved somewhere else ? to only allow one event watcher
+    public void onDeath(LivingDeathEvent event) {
+
+        // Resets the block state when the mob dies
+        if(event.getEntityLiving() == this.digger) {
+            ESMTweaks.logger.debug("ENTITY DIED");
+            this.resetTask();
+        }
+    }
 }

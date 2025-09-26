@@ -11,7 +11,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import lirkas.esmtweaks.ESMTweaks;
 
-
+/**
+ * The categories and option order in the config GUI are alphabetically sorted (ascending), 
+ * based on the name assigned to them (from the annotation not the variable or class name).
+ */
 @Config(modid = ESMTweaks.MOD_ID)
 public class ModConfig {
 
@@ -19,6 +22,9 @@ public class ModConfig {
     public static final AICategory AI = new AICategory();
 
     @Name("Misc")
+    @Comment({
+        "Debbugging and other miscellaneous options."
+    })
     public static final MiscCategory MISC = new MiscCategory();
 
 
@@ -38,7 +44,8 @@ public class ModConfig {
             "Mobs that can break blocks will only be able to do so " +
             "if they have the right tool for it." +
             "(They cannot break blocks that require specific tool class/level " +
-            "without such tool)",
+            "without such tool). " +
+            "Disabling this option allows them to break any block by hand.",
             "Requires [ Use Alternative Digging AI ] to be enabled."
         })
         public boolean mustHaveCorrectTool = true;
@@ -49,6 +56,23 @@ public class ModConfig {
             "Requires [ Digging AI Must Use Correct Tool ] to be enabled."
         })
         public boolean shouldCheckBothHands = true;
+
+        @Name("Digging AI Use ESM Default Break Check")
+        @Comment({
+            "Uses Epic Siege Mod original verification method to check if the " +
+            "mob is allowed to mine the block or not.",
+            "Takes priority over other settings."
+        })
+        public boolean useESMDefaultHarvestCheck = false;
+
+        @Name("AI Task Update On Death")
+        @Comment({
+            "When a mob that has an AI dies, it gets one last task update. " +
+            "This allows for instance for blocks to be visually reset " + 
+            "to their default mined state, but it could cause issues with other AI types." +
+            "Takes priority over other settings."
+        })
+        public boolean updateAITaskOnDeath = true;
     }
     
     public static class MiscCategory {
