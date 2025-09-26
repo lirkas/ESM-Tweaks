@@ -1,7 +1,5 @@
 package lirkas.esmtweaks.ai;
 
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -241,7 +239,11 @@ public class AltEntityAIDigging extends EntityAIBase {
             IBlockState state = this.digger.world.getBlockState(pos);
             // could remove the right side of this AND condition after some verification and testing,
             // since the same check is done inside canHarvest()
-            if (this.canHarvest(pos) && ((List)CfgProps.DIG_BL.get((Entity)this.digger)).contains(state.getBlock().getRegistryName().toString()) == ((Boolean)CfgProps.DIG_BL_INV.get((Entity)this.digger)).booleanValue()) {
+            if (this.canHarvest(pos) && 
+                (CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
+                    !CfgProps.DIG_BL_INV.get(this.digger).booleanValue())) {
+
+
                 return pos;
             }
         }
