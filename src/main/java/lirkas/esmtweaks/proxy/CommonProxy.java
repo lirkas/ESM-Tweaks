@@ -11,7 +11,7 @@ import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
 import lirkas.esmtweaks.ai.registrar.TaskRegistrar;
 import lirkas.esmtweaks.config.ModConfig;
-import lirkas.esmtweaks.event.CommonEventHandler;
+import lirkas.esmtweaks.event.CommonEventRegistrar;
 
 
 public abstract class CommonProxy implements IProxy {
@@ -20,7 +20,7 @@ public abstract class CommonProxy implements IProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ESMTweaks.logger = event.getModLog();
         ESMTweaks.logger.debug("CommonProxy preInit");
-        CommonEventHandler.INSTANCE.registerAllEventHandlers();
+        CommonEventRegistrar.INSTANCE.registerAllEventHandlers();
     }
 
     @Override

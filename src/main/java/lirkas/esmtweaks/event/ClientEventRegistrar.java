@@ -6,7 +6,7 @@ import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.util.HarvestUtil;
 
 
-public class ClientEventRegistrar extends CommonEventHandler {
+public class ClientEventRegistrar extends CommonEventRegistrar {
     
     public static final ClientEventRegistrar INSTANCE = new ClientEventRegistrar();
 

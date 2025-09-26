@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import lirkas.esmtweaks.ESMTweaks;
-import lirkas.esmtweaks.event.ServerEventHandler;
+import lirkas.esmtweaks.event.ServerEventRegistrar;
 
 
 @SideOnly(Side.SERVER)
@@ -17,7 +17,7 @@ public class ServerProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         ESMTweaks.logger.debug("ServerProxy preInit");
-        ServerEventHandler.INSTANCE.registerAllEventHandlers();
+        ServerEventRegistrar.INSTANCE.registerAllEventHandlers();
     }
 
     @Override

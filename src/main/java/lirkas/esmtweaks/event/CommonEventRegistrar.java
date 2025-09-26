@@ -5,9 +5,9 @@ import net.minecraftforge.common.MinecraftForge;
 import lirkas.esmtweaks.ESMTweaks;
 
 
-public class CommonEventHandler implements IEventHandler {
+public class CommonEventRegistrar implements IEventRegistrar {
 
-    public static final CommonEventHandler INSTANCE = new CommonEventHandler();
+    public static final CommonEventRegistrar INSTANCE = new CommonEventRegistrar();
 
     @Override
     public void registerAllEventHandlers() {

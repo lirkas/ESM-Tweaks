@@ -1,6 +1,6 @@
 package lirkas.esmtweaks.event;
 
-public class ServerEventHandler extends CommonEventHandler {
+public class ServerEventRegistrar extends CommonEventRegistrar {
     
-    public static final ServerEventHandler INSTANCE = new ServerEventHandler();
+    public static final ServerEventRegistrar INSTANCE = new ServerEventRegistrar();
 }
