@@ -2,7 +2,6 @@ package lirkas.esmtweaks.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +10,6 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -20,7 +18,6 @@ import tyra314.toolprogression.config.ConfigHandler;
 import tyra314.toolprogression.harvest.BlockHelper;
 import tyra314.toolprogression.harvest.BlockOverwrite;
 import tyra314.toolprogression.harvest.HarvestLevelName;
-import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.mods.toolprogression.ToolProgression;
 
@@ -370,21 +367,6 @@ public class HarvestUtil {
                     event.getEntityPlayer().sendStatusMessage(
                         getBlockBreakableTextMessage(event.getPos(), event.getEntityPlayer(), ModConfig.MISC.useOffHandItem), true);
                 }
-            }
-        }
-
-        // This should be moved somewhere else ?
-        @SubscribeEvent
-        public void onEntityDeath(LivingDeathEvent event) {
-            
-            if(ModConfig.AI.updateAITaskOnDeath && EntityLiving.class.isInstance(event.getEntityLiving())) {
-
-                EntityLiving entityLiving = (EntityLiving) event.getEntityLiving();
-                ESMTweaks.logger.debug("updating AITask on death for " + entityLiving.getDisplayName());
-            
-                // this allows for AI tasks to reset when the mob dies but it could cause unexpected issues 
-                // with other mobs since it targets all mobs that have tasks attached to them.
-                entityLiving.tasks.onUpdateTasks();
             }
         }
     }

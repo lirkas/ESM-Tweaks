@@ -3,6 +3,7 @@ package lirkas.esmtweaks.event;
 import net.minecraftforge.common.MinecraftForge;
 
 import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.event.handler.EntityEventHandler;
 
 
 public class CommonEventRegistrar implements IEventRegistrar {
@@ -12,6 +13,7 @@ public class CommonEventRegistrar implements IEventRegistrar {
     @Override
     public void registerAllEventHandlers() {
         ESMTweaks.logger.debug("CommonEventHandler registerAllEventHandlers");
+        MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
     }
 
     @Override
