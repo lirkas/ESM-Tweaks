@@ -229,4 +229,7 @@ out/
 
 # minecraft-forge
 run/
+
+
 libs/*
+.docs
