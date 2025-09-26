@@ -45,6 +45,8 @@ dependencies {
 
 processResources {
 
+    inputs.property "version", project.modVersion
+
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
