@@ -6,9 +6,9 @@ import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.util.HarvestUtil;
 
 
-public class ClientEventHandler extends CommonEventHandler {
+public class ClientEventRegistrar extends CommonEventHandler {
     
-    public static final ClientEventHandler INSTANCE = new ClientEventHandler();
+    public static final ClientEventRegistrar INSTANCE = new ClientEventRegistrar();
 
     @Override
     public void registerAllEventHandlers(){
