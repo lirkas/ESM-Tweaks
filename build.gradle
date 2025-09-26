@@ -12,6 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+// ======================================================================================================
 
 apply plugin: "java"
 apply plugin: "eclipse"
@@ -43,39 +44,17 @@ dependencies {
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    //inputs.property "version", project.modVersion
-    //inputs.property "mcversion", project.modVersion
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
-        // replace ${variable} fields in the file
-        // this must be done in the same expand() ?
         expand(
             'modVersion':project.modVersion,
             'minecraftVersion':project.minecraftVersion
         )
     }
 
-    //copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
-
-// https://github.com/seppukudevelopment/seppuku/issues/16
-// Apparently makes it so the mod resources are detected by forge when minecraft is run via gradle
-// but it messes up regular build until this is disabled and the "build" folder is removed
-//
-// if (buildmode.equals("IDE")) { 
-//     sourceSets { 
-//         main { 
-//             output.resourcesDir = output.classesDir 
-//         } 
-//     } 
-// } 
-
-// Fix and explanation about for assets download failure when launching minecraft from gradle task
-// https://naruyoko.github.io/website/oldForgeGradleAssets400.html
