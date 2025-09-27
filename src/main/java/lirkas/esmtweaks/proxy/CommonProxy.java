@@ -1,10 +1,10 @@
 package lirkas.esmtweaks.proxy;
 
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-
 import funwayguy.epicsiegemod.ai.additions.AdditionDigger;
 
 import lirkas.esmtweaks.ESMTweaks;
@@ -15,12 +15,15 @@ import lirkas.esmtweaks.event.CommonEventRegistrar;
 
 
 public abstract class CommonProxy implements IProxy {
-    
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ESMTweaks.logger = event.getModLog();
         ESMTweaks.logger.debug("CommonProxy preInit");
         CommonEventRegistrar.INSTANCE.registerAllEventHandlers();
+        CommonEventRegistrar.INSTANCE.unregisterEventHanlder(
+            "funwayguy.epicsiegemod.handlers.MainHandler", 
+            "onEntityConstruct", EntityJoinWorldEvent.class);
     }
 
     @Override

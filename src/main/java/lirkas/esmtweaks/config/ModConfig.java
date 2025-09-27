@@ -73,6 +73,9 @@ public class ModConfig {
             "Takes priority over other settings."
         })
         public boolean updateAITaskOnDeath = true;
+
+        public boolean shouldBeGivenTool = true;
+        public boolean shouldOverrideTool = false;
     }
     
     public static class MiscCategory {
