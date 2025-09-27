@@ -4,6 +4,7 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -74,7 +75,31 @@ public class ModConfig {
         })
         public boolean updateAITaskOnDeath = true;
 
+        @Name("Digging AI Get Pickaxe On Spawn")
+        @Comment({
+            "Disable this to not allow this mod to give extra chance for digging mobs to " +
+            "receive a pickaxe. They can still get them from minecraft vanilla behavior " +
+            "or other mods, regardless of this setting. " +
+            "This is simply 'another chance' to be given one."
+        })
         public boolean shouldBeGivenTool = true;
+
+        @Name("Digging AI Pickaxe Chance")
+        @Comment({
+            "The probability for the digging mob to be given a pickaxe when spawning. " +
+            "0 = never gets the chance, 100 = always gets it. ",
+            "Requires [ Digging AI Get Pickaxe On Spawn ] to be enabled."
+        })
+        @RangeInt(min = 0, max = 100)
+        public int toolChance = 25;
+
+        @Name("Digging AI Override Tool")
+        @Comment({
+            "If this is enabled and the digging mob gets the chance to receive the pickaxe on spawn, " +
+            "then the pickaxe replaces whatever that mob was holding in its main hand, " + 
+            "else the pickaxe is not received and the main hand item is kept.",
+            "Requires [ Digging AI Get Pickaxe On Spawn ] to be enabled."
+        })
         public boolean shouldOverrideTool = false;
     }
     

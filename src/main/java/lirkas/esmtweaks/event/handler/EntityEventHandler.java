@@ -125,7 +125,7 @@ public class EntityEventHandler {
 
         // 25% chance to obtain a pickaxe, if the config allows it.
         // note the chance to be given a tool from vanilla mechanics is still happening (possibly before this event?)
-        if(ModConfig.AI.shouldBeGivenTool && Util.isLucky(25, 100, entityLiving.getRNG())) {
+        if(ModConfig.AI.shouldBeGivenTool && Util.isLucky(ModConfig.AI.toolChance, 100, entityLiving.getRNG())) {
 
             if(ModConfig.AI.shouldOverrideTool || entityLiving.getHeldItemMainhand().isEmpty()) {
                 entityLiving.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
