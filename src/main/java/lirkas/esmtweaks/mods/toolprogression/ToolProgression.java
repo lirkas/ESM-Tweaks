@@ -8,9 +8,7 @@ public class ToolProgression {
     public static final String MOD_ID = "toolprogression";
 
 
-    public static final boolean isLoaded(){
-    
+    public static final boolean isLoaded() {
         return Loader.isModLoaded(MOD_ID);
-      
     }
 }

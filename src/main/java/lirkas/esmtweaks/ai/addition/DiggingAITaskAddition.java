@@ -23,12 +23,7 @@ public class DiggingAITaskAddition implements ITaskAddition {
 	
 	@Override
 	public boolean isValid(EntityLiving entityLiving) {
-
-		boolean canDig = CfgProps.DIGGING.get(entityLiving);
-        // EntityEntry entityEntry = EntityRegistry.getEntry(entityLiving.getClass());
-        // System.out.println((entityEntry == null ? entityLiving.getName() : entityEntry.getRegistryName()) + " ROTN DIG: " + canDig);
-
-        return canDig;
+        return CfgProps.DIGGING.get(entityLiving);
 	}
 	
 	@Override

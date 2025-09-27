@@ -10,24 +10,25 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import tyra314.toolprogression.api.OverwrittenContent;
 import tyra314.toolprogression.config.ConfigHandler;
 import tyra314.toolprogression.harvest.BlockHelper;
 import tyra314.toolprogression.harvest.BlockOverwrite;
 import tyra314.toolprogression.harvest.HarvestLevelName;
-import lirkas.esmtweaks.config.ModConfig;
+
 import lirkas.esmtweaks.mods.toolprogression.ToolProgression;
 
-
+/**
+ * A Collection of methods to obtain various details related to block harvesting/breaking.
+ */
 public class HarvestUtil {
     
     /**
      * Checks if a specific block can be harvested/destroyed without any tool.
+     * 
      * @param blockState The block to check.
-     * @returns true if the block can be broken.
+     * @return true if the block can be broken.
      */
     public static boolean canBreakBlockByHand(IBlockState blockState) {
         
@@ -39,7 +40,7 @@ public class HarvestUtil {
             return false;
         }
         
-        if(ToolProgression.isLoaded()){
+        if(ToolProgression.isLoaded()) {
 
             // ToolProgression API doesnt register keys the same way as its config does, 
             // so not all overwrites are properly added in the API (tooprogression 1.12.2-1.6.2)
@@ -72,9 +73,10 @@ public class HarvestUtil {
 
     /**
      * Checks if a specific block can be harvested/destroyed with the specified item.
+     * 
      * @param itemStack The item used to break the block.
      * @param blockState The block to check.
-     * @returns true if the block can be broken with that item. 
+     * @return true if the block can be broken with that item. 
      */
     public static boolean canBreakWithItem(ItemStack itemStack, IBlockState blockState) {
         
@@ -107,9 +109,11 @@ public class HarvestUtil {
     /**
      * A combination of canBreakBlockByHand and canBreakWithItem for checking if the block
      * can be broken.
+     * 
      * @param entity The entity (monster, player or anything else) attempting to break the block.
      * @param blockState The block to check.
      * @param checkBothHands Do Checks for both held items if true.
+     * @return true if the block can be broken by this entity.
      */
     public static boolean canEntityBreakBlock(EntityLivingBase entity, IBlockState blockState, boolean checkBothHands) {
 
@@ -125,10 +129,14 @@ public class HarvestUtil {
     }
 
     /**
-     * Check if the tool is effective against this block. 
+     * Checks if the tool is effective against this block. 
      * Doesnt care if the block requires a tool to be broken or not.
+     * 
+     * @param itemStack The tool to check with.
+     * @param blockState The block to check on.
+     * @return true is the tool if effective.
      */
-    public static boolean isToolEffective(ItemStack itemStack, IBlockState blockState){
+    public static boolean isToolEffective(ItemStack itemStack, IBlockState blockState) {
 
         String blockHarvestClass = blockState.getBlock().getHarvestTool(blockState);
 
@@ -148,6 +156,12 @@ public class HarvestUtil {
         return false;
     }
 
+    /**
+     * Checks if the block is unbreakable (bedrock-like blocks).
+     * 
+     * @param blockState The block to check.
+     * @return true if the block is unbreakable.
+     */
     public static boolean isBlockUnbreakable(IBlockState blockState) {
 
         // Unbreakable blocks such as bedrock have a negative hardness
@@ -159,17 +173,19 @@ public class HarvestUtil {
         return false;
     }
 
-    
     /**
      * Checks if the block destroyability is enforced by ToolProgression or another
      * mod's setting.
+     * 
+     * @param blockState The block to check.
+     * @return true if the block is not meant to be breakable.
      */
     public static boolean shouldBlockNotBeBroken(IBlockState blockState) {
 
         if(ToolProgression.isLoaded()) {
 
             BlockOverwrite overwrite = ConfigHandler.blockOverwrites.get(blockState);
-            if (ConfigHandler.prevent_block_destruction && (overwrite == null || !overwrite.destroyable)){
+            if (ConfigHandler.prevent_block_destruction && (overwrite == null || !overwrite.destroyable)) {
                 return true;
             }
         }
@@ -179,8 +195,13 @@ public class HarvestUtil {
 
     /**
      * Non performance-optimal way to calculate the theorical time it would take to break
-     * a block, using specific tool/item.
+     * a block, using a specific tool/item.
      * Does not account for all factors, such as being in water, under haste effect, etc.
+     * 
+     * @param itemStack The item to test with.
+     * @param blockPos The block to check.
+     * @param world The world where the check takes place.
+     * @return The time it would take for the block to be mined with that item, in seconds.
      * 
      * @see https://minecraft.wiki/w/Breaking#Calculation
      */
@@ -189,7 +210,7 @@ public class HarvestUtil {
         IBlockState blockState = world.getBlockState(blockPos);
 
         boolean canToolBreakBlock = false;
-        if(canBreakWithItem(itemStack, blockState)){
+        if(canBreakWithItem(itemStack, blockState)) {
             canToolBreakBlock = true;
         }
 
@@ -219,20 +240,27 @@ public class HarvestUtil {
         return timeToBreak;
     }
 
-    /* Returns a text object to be displayed in the game chat, that would similat to that:
-
-        [BLOCK INFOS] 
-        Name        : Grass
-        ID          : minecraft:grass:0
-        Breakable   : Yes
-        CanIBreak   : No
-        Hardness    : 1.2
-        Eff. Tools  : Pickaxe - Sturdy [2]
-        HandBreak   : Yes
-        BreakTime   : 1.5s
-    */
+    /**
+     * Returns various informations about a block, and its destroyability/breakability details.
+     * This is returned in a format to be displayed by the game.
+     * 
+     * @param blockPos The block to get infos from.
+     * @param entityLiving The entity to get details from, related to this block info.
+     * @param useOffHandItem Whether it should should use off hand held item instead of main hand for certain infos.
+     * @return The message containing all the informations, formatted and ready to be displayed in the chat or another GUI.
+     */
     public static TextComponentString getBlockInfosTextMessage(BlockPos blockPos, EntityLivingBase entityLiving, boolean useOffHandItem) {
-
+        /* The info message looks similar to this:
+            [BLOCK INFOS] 
+            Name        : Stone
+            ID          : minecraft:grass:0
+            Breakable   : Yes
+            CanIBreak   : No
+            Hardness    : 1.2
+            Eff. Tools  : Pickaxe - Crude [0]
+            HandBreak   : No
+            BreakTime   : 1.5s
+        */
         TextComponentString infosText = new TextComponentString("");
 
         Style goldColor = new Style().setColor(TextFormatting.GOLD);
@@ -320,6 +348,14 @@ public class HarvestUtil {
         return infosText;
     }
     
+    /**
+     * Returns a small text message about whether the a block can be broken by a specific entity or not.
+     * 
+     * @param blockPos The block to check.
+     * @param entityLiving The entity that would attempt to break the block.
+     * @param useOffHandItem Whether it should should use off hand held item instead of main hand for checking.
+     * @return The message saying if this block can be broken or not.
+     */
     public static TextComponentString getBlockBreakableTextMessage(BlockPos blockPos, EntityLivingBase entityLiving, boolean useOffHandItem) {
 
         TextComponentString breakText = new TextComponentString("");
@@ -345,29 +381,5 @@ public class HarvestUtil {
         ));
 
         return breakText;
-    }
-
-    public static class EventHandler {
-
-        @SubscribeEvent
-        public void onPlayerLeftClick(PlayerInteractEvent.LeftClickBlock event) {
-            
-            if(!event.getWorld().isRemote) {
-                return;
-            }
-
-            if(ModConfig.MISC.enableDebug) {
-
-                if(ModConfig.MISC.displayBlockInfoInChat) {
-                    event.getEntityPlayer().sendMessage(
-                    getBlockInfosTextMessage(event.getPos(), event.getEntityPlayer(), ModConfig.MISC.useOffHandItem));
-                }
-                
-                if(ModConfig.MISC.displayCanBreakBlockMessage) {
-                    event.getEntityPlayer().sendStatusMessage(
-                        getBlockBreakableTextMessage(event.getPos(), event.getEntityPlayer(), ModConfig.MISC.useOffHandItem), true);
-                }
-            }
-        }
     }
 }

@@ -1,20 +1,26 @@
-package lirkas.esmtweaks.event;
+package lirkas.esmtweaks.event.registrar;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.IEventListener;
+import tyra314.toolprogression.handlers.HarvestEventHandler;
 import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.event.handler.ConfigEventHandler;
 import lirkas.esmtweaks.event.handler.EntityEventHandler;
 
-// maybe rename those classes with EventHandler or Listener instead of just Event in the name ?
-public class CommonEventRegistrar implements IEventRegistrar {
+/**
+ * Central place for EventHandlers un/registration management.
+ */
+public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
 
-    public static final CommonEventRegistrar INSTANCE = new CommonEventRegistrar();
+    public static final CommonEventHandlerRegistrar INSTANCE = new CommonEventHandlerRegistrar();
 
     @Override
     public void registerAllEventHandlers() {
         ESMTweaks.logger.debug("CommonEventHandler registerAllEventHandlers");
+        MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
+        MinecraftForge.EVENT_BUS.register(new HarvestEventHandler());
     }
 
     @Override
@@ -65,7 +71,7 @@ public class CommonEventRegistrar implements IEventRegistrar {
             if(listener.toString().contains(classpath) && listener.toString().contains(methodName)) {
 
                 // only need one of these two, ideally the first one.
-                MinecraftForge.EVENT_BUS.unregister(listener);
+                //MinecraftForge.EVENT_BUS.unregister(listener);
                 tmpEvent.getListenerList().unregister(0, listener);
                 
                 ESMTweaks.logger.debug("unregisterEventHanlder : unregistered " + classpath + ":" + methodName);

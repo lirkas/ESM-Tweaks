@@ -10,7 +10,7 @@ import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
 
 
-public class TaskRegistrar {
+public class AITaskRegistrar {
 
     /**
      * Registers an ITaskAddition, such as an specific class that applies AI on mob spawn.
@@ -45,7 +45,7 @@ public class TaskRegistrar {
                 iterator.remove();
                 ESMTweaks.logger.debug("Unregistered task : " + taskClass.getSimpleName());
                 // exit the for loop here if we only remove the first match
-                if(!allMatches){
+                if(!allMatches) {
                     break;
                 }
             }

@@ -1,14 +1,10 @@
 package lirkas.esmtweaks.config;
 
 import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import lirkas.esmtweaks.ESMTweaks;
 
@@ -136,23 +132,5 @@ public class ModConfig {
             "with a less destructive item such as a sword."
         })
         public boolean useOffHandItem = false;
-    }
-
-    @EventBusSubscriber(modid = ESMTweaks.MOD_ID)
-    public static class EventHandler {
-        /**
-         * Makes sure all the config variables in the config file are saved whenever the user
-         * changes them from the game.
-         * @param event
-         */
-        @SubscribeEvent
-        public static void onConfigChanged(ConfigChangedEvent event) {
-
-            if(event.getModID().equals(ESMTweaks.MOD_ID)) {
-
-                ESMTweaks.logger.debug("Configuration changed");
-                ConfigManager.sync(ESMTweaks.MOD_ID, Config.Type.INSTANCE);
-            }
-        }
     }
 }

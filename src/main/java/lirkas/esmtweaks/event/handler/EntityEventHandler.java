@@ -6,15 +6,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import funwayguy.epicsiegemod.api.EsmTaskEvent;
 import funwayguy.epicsiegemod.api.ITaskAddition;
 import funwayguy.epicsiegemod.api.TaskRegistry;
-import funwayguy.epicsiegemod.handlers.MainHandler;
 
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
@@ -22,12 +19,17 @@ import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.util.Util;
 
 /**
- * Handle general events related to entities
+ * Handle general events related to non-player entities.
  */
 public class EntityEventHandler {
     
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
+        
+        // check if this is needed here or not
+        // if(event.getWorld().isRemote) {
+        //     return;
+        // }
         
         if(ModConfig.AI.updateAITaskOnDeath && EntityLiving.class.isInstance(event.getEntityLiving())) {
 
@@ -46,53 +48,12 @@ public class EntityEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onEntityConstruct(EntityJoinWorldEvent event) {
-        
-        if(event.getWorld().isRemote) {
-            return;
-        }
-
-        // should not be called if ESM onEntityConstruct is still registered as a listener
-        new MainHandler().onEntityConstruct(event);
-        
-        
-        if(event.getEntity() instanceof EntityLiving) {
-
-			EntityLiving entityLiving = (EntityLiving)event.getEntity();
-            ESMTweaks.logger.debug("onEntityConstruct : " + entityLiving.getDisplayName());
-
-            // do the pickaxe giving check here
-
-        }
-    }
-
-    // Currently here for debug purposes only
-    @SubscribeEvent
-    public void onAddESMTask(EsmTaskEvent.Addition event) {
-
-        ESMTweaks.logger.debug("");
-        ESMTweaks.logger.debug("onAddESMTask : " + event.getAddition().getClass());
-
-        EntityLiving entityLiving = event.getEntity();
-        ITaskAddition taskAddition = event.getAddition();
-
-        for(EntityAITaskEntry taskEntry : entityLiving.tasks.taskEntries) {
-            ESMTweaks.logger.debug("    AI : " + taskEntry.action.getClass());
-            // if(taskEntry.action.getClass() == taskAddition.getClass().getMethod("getAdditionalAI").getReturnType()){
-                // ESMTweaks.logger.debug("task already exists : " + taskEntry.action.getClass());
-                // event.setResult(Event.Result.DENY);
-            // }
-        }
-    }
-
     /**
      * Called when an entity spawns for the first time.
      */
     @SubscribeEvent
     public void onEntityLivingSpawn(LivingSpawnEvent.SpecialSpawn event) {
 
-        ESMTweaks.logger.debug(event.getClass().getSimpleName());
         ESMTweaks.logger.debug(event.getEntityLiving().getName() + " has spawned at" + 
             " x: " + event.getEntityLiving().getPosition().getX() +
             " y: " + event.getEntityLiving().getPosition().getY() +

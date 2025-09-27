@@ -5,13 +5,14 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+
 import funwayguy.epicsiegemod.ai.additions.AdditionDigger;
 
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
-import lirkas.esmtweaks.ai.registrar.TaskRegistrar;
+import lirkas.esmtweaks.ai.registrar.AITaskRegistrar;
 import lirkas.esmtweaks.config.ModConfig;
-import lirkas.esmtweaks.event.CommonEventRegistrar;
+import lirkas.esmtweaks.event.registrar.CommonEventHandlerRegistrar;
 
 
 public abstract class CommonProxy implements IProxy {
@@ -20,10 +21,12 @@ public abstract class CommonProxy implements IProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ESMTweaks.logger = event.getModLog();
         ESMTweaks.logger.debug("CommonProxy preInit");
-        CommonEventRegistrar.INSTANCE.registerAllEventHandlers();
-        CommonEventRegistrar.INSTANCE.unregisterEventHanlder(
+
+        // this is replaced with another event handler that wraps it
+        CommonEventHandlerRegistrar.INSTANCE.unregisterEventHanlder(
             "funwayguy.epicsiegemod.handlers.MainHandler", 
             "onEntityConstruct", EntityJoinWorldEvent.class);
+        CommonEventHandlerRegistrar.INSTANCE.registerAllEventHandlers();
     }
 
     @Override
@@ -41,12 +44,12 @@ public abstract class CommonProxy implements IProxy {
         ESMTweaks.logger.debug("CommonProxy serverAboutToStart");
         
         if(ModConfig.AI.isAltDiggingAIEnabled) {
-            TaskRegistrar.unregisterTasks(AdditionDigger.class);
-            TaskRegistrar.registerTask(new DiggingAITaskAddition());
+            AITaskRegistrar.unregisterTasks(AdditionDigger.class);
+            AITaskRegistrar.registerTask(new DiggingAITaskAddition());
         }
         else {
-            TaskRegistrar.unregisterTasks(DiggingAITaskAddition.class);
-            TaskRegistrar.registerTask(new AdditionDigger());
+            AITaskRegistrar.unregisterTasks(DiggingAITaskAddition.class);
+            AITaskRegistrar.registerTask(new AdditionDigger());
         }
     }
 }

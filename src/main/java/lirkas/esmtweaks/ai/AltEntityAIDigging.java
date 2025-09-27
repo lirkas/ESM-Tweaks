@@ -19,6 +19,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+
 import funwayguy.epicsiegemod.ai.utils.AiUtils;
 import funwayguy.epicsiegemod.config.props.CfgProps;
 
@@ -87,7 +88,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         ESMTweaks.logger.debug("startExecuting");
 		super.startExecuting();
-		digger.getNavigator().clearPath();
+		this.digger.getNavigator().clearPath();
 		this.obsTick = 0;
         this.obsPos = null;
 	}
@@ -140,21 +141,21 @@ public class AltEntityAIDigging extends EntityAIBase {
             return;
         }
 
-		digger.getLookHelper().setLookPosition(
-            target.posX, target.posY + (double)target.getEyeHeight(), 
-            target.posZ, (float)digger.getHorizontalFaceSpeed(), 
-            (float)digger.getVerticalFaceSpeed());
-		digger.getNavigator().clearPath();
+		this.digger.getLookHelper().setLookPosition(
+            this.target.posX, this.target.posY + (double)this.target.getEyeHeight(), 
+            this.target.posZ, (float)this.digger.getHorizontalFaceSpeed(), 
+            (float)this.digger.getVerticalFaceSpeed());
+		this.digger.getNavigator().clearPath();
 		
-		digTick++;
+		this.digTick++;
 
         float str = AiUtils.getBlockStrength(this.digger, this.digger.world, this.curBlock) * ((float)this.digTick + 1.0f);
-		ItemStack heldItem = digger.getHeldItem(EnumHand.MAIN_HAND);
-		IBlockState state = digger.world.getBlockState(curBlock);
+		ItemStack heldItem = this.digger.getHeldItem(EnumHand.MAIN_HAND);
+		IBlockState state = this.digger.world.getBlockState(this.curBlock);
 		
         this.previousBlockState = state;
 
-		if(digger.world.isAirBlock(curBlock)) {
+		if(this.digger.world.isAirBlock(this.curBlock)) {
 			this.resetTask();
 		}
         else if(str >= 1F) { // Block has been broken.
@@ -162,7 +163,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 			// boolean canHarvest = state.getMaterial().isToolNotRequired() || (!heldItem.isEmpty() && heldItem.canHarvestBlock(state));
             boolean canHarvest = this.canHarvest;
 
-			digger.world.destroyBlock(curBlock, false);
+			this.digger.world.destroyBlock(this.curBlock, false);
 
             if (canHarvest && this.digger.world instanceof WorldServer) {
                 // should ideally get rid of FakePlayer stuffs, but need to figure out what all this does
@@ -175,14 +176,14 @@ public class AltEntityAIDigging extends EntityAIBase {
                 state.getBlock().harvestBlock(this.digger.world, (EntityPlayer)player, this.curBlock, state, tile, heldItem);
             }
 
-            digger.getNavigator().setPath(digger.getNavigator().getPathToEntityLiving(target), digger.getMoveHelper().getSpeed()); // This is fine. We only run it after a block breaks
+            this.digger.getNavigator().setPath(this.digger.getNavigator().getPathToEntityLiving(target), this.digger.getMoveHelper().getSpeed()); // This is fine. We only run it after a block breaks
 			this.resetTask();
 		} 
         else if(digTick % 5 == 0) { // Just keeping digging...
 
-			digger.world.playSound(null, curBlock, state.getBlock().getSoundType(state, digger.world, curBlock, digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
-			digger.swingArm(EnumHand.MAIN_HAND);
-			digger.world.sendBlockBreakProgress(digger.getEntityId(), curBlock, (int)(str * 10F));
+			this.digger.world.playSound(null, this.curBlock, state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
+			this.digger.swingArm(EnumHand.MAIN_HAND);
+			this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, (int)(str * 10F));
 		}
 	}
 	
@@ -331,7 +332,7 @@ public class AltEntityAIDigging extends EntityAIBase {
         // If the mob will respect block breaking properties 
         // (tool and harvest level restriction) else they will be able to harvest
         // almost every block by hand
-        if(ModConfig.AI.mustHaveCorrectTool){
+        if(ModConfig.AI.mustHaveCorrectTool) {
             this.canHarvest = canHarvestBlock(pos);
         }
         else {

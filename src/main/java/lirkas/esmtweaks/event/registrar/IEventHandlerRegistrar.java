@@ -1,7 +1,7 @@
-package lirkas.esmtweaks.event;
+package lirkas.esmtweaks.event.registrar;
 
 
-public interface IEventRegistrar {
+public interface IEventHandlerRegistrar {
 
     public void registerAllEventHandlers();
     public void unregisterAllEventHandlers();

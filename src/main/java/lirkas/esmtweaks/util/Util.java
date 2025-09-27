@@ -14,7 +14,7 @@ public class Util {
      * @param chance if the generated number is smaller than or equal to this value, returns true.
      * @param maxValue the highest positive number that can be generated.
      * @param rng the random source.
-     * @returns true if the randomly generated value is smaller or equal to 'chance', else false.
+     * @return true if the randomly generated value is smaller or equal to 'chance', else false.
      */
     public static boolean isLucky(int chance, int maxValue, Random rng) {
         return chance >= rng.nextInt(maxValue) + 1;
