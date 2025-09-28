@@ -29,7 +29,6 @@ compileJava.targetCompatibility = targetCompatibility
 minecraft {
     mappings = "${mcpMappings}"
     version = "${minecraftVersion}-${forgeVersionFG2Latest}"
-    runDir = "run"
 
     // Uses dedicated folders when running client or server 
     // if "-Pclient" or "-Pserver" is passed as argument to gradle.
@@ -39,6 +38,16 @@ minecraft {
     else if(project.hasProperty('server')) {
         runDir = "instance/server"
     }
+    else {
+        runDir = "run"
+    }
+
+    makeObfSourceJar = false
+}
+
+runClient {
+    args '--username', 'Tweaker'
+    args '--uuid', '00000000-0000-0000-0000-000000000000'
 }
 
 repositories {
@@ -49,7 +58,7 @@ repositories {
 
 dependencies {
     deobfCompile "curse.maven:tool-progression-266550:3270468"
-    compile "curse.maven:epic-siege-mod-229449:3356157"
+    deobfCompile "curse.maven:epic-siege-mod-229449:3356157"
 }
 
 processResources {
