@@ -242,9 +242,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             // since the same check is done inside canHarvest()
             if (this.canHarvest(pos) && 
                 (CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
-                    !CfgProps.DIG_BL_INV.get(this.digger).booleanValue())) {
-
-
+                    CfgProps.DIG_BL_INV.get(this.digger).booleanValue())) {
                 return pos;
             }
         }
