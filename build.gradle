@@ -30,6 +30,15 @@ minecraft {
     mappings = "${mcpMappings}"
     version = "${minecraftVersion}-${forgeVersionFG2Latest}"
     runDir = "run"
+
+    // Uses dedicated folders when running client or server 
+    // if "-Pclient" or "-Pserver" is passed as argument to gradle.
+    if (project.hasProperty('client')) {
+        runDir = "instance/client"
+    }
+    else if(project.hasProperty('server')) {
+        runDir = "instance/server"
+    }
 }
 
 repositories {
