@@ -48,6 +48,11 @@ minecraft {
 runClient {
     args '--username', 'Tweaker'
     args '--uuid', '00000000-0000-0000-0000-000000000000'
+    systemProperty "log4j.configurationFile", "log4j2-devfix.xml"
+}
+
+runServer {
+    systemProperty "log4j.configurationFile", "log4j2-devfix.xml"
 }
 
 repositories {
