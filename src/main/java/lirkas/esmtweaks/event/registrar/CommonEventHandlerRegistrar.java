@@ -3,13 +3,14 @@ package lirkas.esmtweaks.event.registrar;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.IEventListener;
-import tyra314.toolprogression.handlers.HarvestEventHandler;
+
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.event.handler.ConfigEventHandler;
 import lirkas.esmtweaks.event.handler.EntityEventHandler;
 
 /**
  * Central place for EventHandlers un/registration management.
+ * Used for both, clients and servers.
  */
 public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
 
@@ -17,26 +18,25 @@ public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
 
     @Override
     public void registerAllEventHandlers() {
-        ESMTweaks.logger.debug("CommonEventHandler registerAllEventHandlers");
+        ESMTweaks.logger.debug("CommonEventHandlerRegistrar registerAllEventHandlers");
         MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
-        MinecraftForge.EVENT_BUS.register(new HarvestEventHandler());
     }
 
     @Override
     public void unregisterAllEventHandlers() {
-        ESMTweaks.logger.debug("CommonEventHandler unregisterAllEventHandlers");
+        ESMTweaks.logger.debug("CommonEventHandlerRegistrar unregisterAllEventHandlers");
     }
 
     @Override
     public void registerEventHandler(Object eventHandler) {
-        ESMTweaks.logger.debug("CommonEventHandler registerEventHandler");
+        ESMTweaks.logger.debug("CommonEventHandlerRegistrar registerEventHandler");
         MinecraftForge.EVENT_BUS.register(eventHandler);
     }
 
     @Override
     public void unregisterEventHanlder(Object eventHandler) {
-        ESMTweaks.logger.debug("CommonEventHandler unregisterEventHanlder");
+        ESMTweaks.logger.debug("CommonEventHandlerRegistrar unregisterEventHanlder");
         MinecraftForge.EVENT_BUS.unregister(eventHandler);
     }
 
