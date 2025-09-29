@@ -80,7 +80,7 @@ public class EntityEventHandler {
             return;
         }
 
-        ESMTweaks.logger.debug("onEntityConstruct "  + event.getEntity().getName());
+        ESMTweaks.logger.debug("onEntityLivingSpawn "  + event.getEntity().getName());
 
         EntityLiving entityLiving = (EntityLiving) event.getEntityLiving();
 
