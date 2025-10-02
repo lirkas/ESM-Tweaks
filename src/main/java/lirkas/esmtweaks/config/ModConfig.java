@@ -230,7 +230,8 @@ public class ModConfig {
     }
 
     /**
-     * Setups config properties. Should only be done once, during game startup.
+     * Setups config properties, and their display order in the GUI.
+     * Should only be done once, during startup.
      */
     public static void setupConfigProperties() {
 
