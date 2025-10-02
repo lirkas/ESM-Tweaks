@@ -22,6 +22,8 @@ public abstract class CommonProxy implements IProxy {
         ESMTweaks.logger = event.getModLog();
         ESMTweaks.logger.debug("CommonProxy preInit");
 
+        ModConfig.init();
+
         // this is replaced with another event handler that wraps it
         CommonEventHandlerRegistrar.INSTANCE.unregisterEventHanlder(
             "funwayguy.epicsiegemod.handlers.MainHandler", 
@@ -43,7 +45,7 @@ public abstract class CommonProxy implements IProxy {
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
         ESMTweaks.logger.debug("CommonProxy serverAboutToStart");
         
-        if(ModConfig.AI.isAltDiggingAIEnabled) {
+        if(ModConfig.AI.Digging.useTweakedAI.getValue()) {
             AITaskRegistrar.unregisterTasks(AdditionDigger.class);
             AITaskRegistrar.registerTask(new DiggingAITaskAddition());
         }

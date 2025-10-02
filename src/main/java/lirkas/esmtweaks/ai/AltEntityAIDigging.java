@@ -275,7 +275,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             return true;
         }
 
-        if(ModConfig.AI.shouldCheckBothHands) {
+        if(ModConfig.AI.Digging.checkBothHands.getValue()) {
             ItemStack offHandItem = this.digger.getHeldItem(EnumHand.OFF_HAND);
             if(HarvestUtil.canBreakWithItem(offHandItem, blockState)) {
                 return true;
@@ -287,7 +287,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	public boolean canHarvest(BlockPos pos) {
 
         // Original check handler
-        if(ModConfig.AI.useESMDefaultHarvestCheck) {
+        if(ModConfig.AI.Digging.legacyHarvestCheck.getValue()) {
 
             this.canHarvest = this.originalCanHarvest(pos);
             return this.canHarvest;
@@ -330,7 +330,7 @@ public class AltEntityAIDigging extends EntityAIBase {
         // If the mob will respect block breaking properties 
         // (tool and harvest level restriction) else they will be able to harvest
         // almost every block by hand
-        if(ModConfig.AI.mustHaveCorrectTool) {
+        if(ModConfig.AI.Digging.mustHaveCorrectTool.getValue()) {
             this.canHarvest = canHarvestBlock(pos);
         }
         else {

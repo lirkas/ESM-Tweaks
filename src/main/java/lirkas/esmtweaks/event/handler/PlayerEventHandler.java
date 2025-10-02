@@ -17,18 +17,18 @@ public class PlayerEventHandler {
         }
 
         // in-game visual feedback for block-related informations
-        if(ModConfig.MISC.enableDebug) {
+        if(ModConfig.Debug.enableDebug.getValue()) {
 
-            if(ModConfig.MISC.displayBlockInfoInChat) {
+            if(ModConfig.Debug.outputBlockInfoInChat.getValue()) {
                 event.getEntityPlayer().sendMessage(
                     HarvestUtil.getBlockInfosTextMessage(
-                        event.getPos(), event.getEntityPlayer(), ModConfig.MISC.useOffHandItem));
+                        event.getPos(), event.getEntityPlayer(), ModConfig.Debug.useOffhandItemForChecks.getValue()));
             }
             
-            if(ModConfig.MISC.displayCanBreakBlockMessage) {
+            if(ModConfig.Debug.showCanBreakBlockMessage.getValue()) {
                 event.getEntityPlayer().sendStatusMessage(
                     HarvestUtil.getBlockBreakableTextMessage(
-                        event.getPos(), event.getEntityPlayer(), ModConfig.MISC.useOffHandItem), true);
+                        event.getPos(), event.getEntityPlayer(), ModConfig.Debug.useOffhandItemForChecks.getValue()), true);
             }
         }
     }

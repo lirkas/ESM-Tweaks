@@ -1,11 +1,10 @@
 package lirkas.esmtweaks.event.handler;
 
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.config.ModConfig;
 
 
 public class ConfigEventHandler {
@@ -17,12 +16,12 @@ public class ConfigEventHandler {
      * @param event The config change event.
      */
     @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent event) {
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
 
         if(event.getModID().equals(ESMTweaks.MOD_ID)) {
 
             ESMTweaks.logger.debug("onConfigChanged");
-            ConfigManager.sync(ESMTweaks.MOD_ID, Config.Type.INSTANCE);
+            ModConfig.configuration.save();
         }
     }
 }

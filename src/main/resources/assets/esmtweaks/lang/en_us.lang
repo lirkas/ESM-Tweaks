@@ -1,0 +1,22 @@
+lirkas.esmtweaks.config.category.AI=AI Settings
+lirkas.esmtweaks.config.category.AI.tooltip=Options related to AI behavior in worlds.
+lirkas.esmtweaks.config.category.AI.General=General AI Settings
+lirkas.esmtweaks.config.category.AI.General.tooltip=
+lirkas.esmtweaks.config.category.AI.Digging=Digging AI Settings
+lirkas.esmtweaks.config.category.AI.Digging.tooltip=Options related to the Digging AI.
+lirkas.esmtweaks.config.category.Debug=Debug Settings
+lirkas.esmtweaks.config.category.Debug.tooltip=Options used for testing and debugging.
+
+lirkas.esmtweaks.config.useTweakedAI=Use Tweaked AI
+lirkas.esmtweaks.config.mustHaveCorrectTool=Mob Tool Check
+lirkas.esmtweaks.config.legacyHarvestCheck=Use ESM Default Check
+lirkas.esmtweaks.config.updateAITaskOnDeath=Update AI task On Death
+lirkas.esmtweaks.config.checkBothHands=Check Both Hands
+lirkas.esmtweaks.config.shouldGetExtraTool=Receive Pickaxe On Spawn
+lirkas.esmtweaks.config.extraToolChance=Pickaxe Chance
+lirkas.esmtweaks.config.overrideTool=Pickaxe Replaces Held Item
+
+lirkas.esmtweaks.config.enableDebug=Enable Debug
+lirkas.esmtweaks.config.displayBlockInfoInChat=Show Block Info In Chat
+lirkas.esmtweaks.config.displayCanBreakBlockMessage=Show Block Break Message
+lirkas.esmtweaks.config.useOffHandItem=Checks For Offhand Item

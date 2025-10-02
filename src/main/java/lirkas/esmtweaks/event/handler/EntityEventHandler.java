@@ -33,7 +33,7 @@ public class EntityEventHandler {
             return;
         }
         
-        if(ModConfig.AI.updateAITaskOnDeath && EntityLiving.class.isInstance(event.getEntityLiving())) {
+        if(ModConfig.AI.General.updateAITaskOnDeath.getValue() && EntityLiving.class.isInstance(event.getEntityLiving())) {
 
             EntityLiving entityLiving = (EntityLiving) event.getEntityLiving();
             ESMTweaks.logger.debug("updating AITask on death for " + entityLiving.getName());
@@ -109,9 +109,10 @@ public class EntityEventHandler {
 
         // 25% chance to obtain a pickaxe, if the config allows it.
         // note the chance to be given a tool from vanilla mechanics is still happening (possibly before this event?)
-        if(ModConfig.AI.shouldBeGivenTool && Util.isLucky(ModConfig.AI.toolChance, 100, entityLiving.getRNG())) {
+        if(ModConfig.AI.Digging.canGetExtraTool.getValue() && 
+                Util.isLucky(ModConfig.AI.Digging.extraToolChance.getValue() , 100, entityLiving.getRNG())) {
 
-            if(ModConfig.AI.shouldOverrideTool || entityLiving.getHeldItemMainhand().isEmpty()) {
+            if(ModConfig.AI.Digging.extraToolOverride.getValue() || entityLiving.getHeldItemMainhand().isEmpty()) {
                 entityLiving.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
             }
         }

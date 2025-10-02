@@ -15,12 +15,13 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import lirkas.esmtweaks.proxy.IProxy;
 
 
-@Mod(useMetadata = true, modid = ESMTweaks.MOD_ID)
+@Mod(useMetadata = true, modid = ESMTweaks.MOD_ID, guiFactory = ESMTweaks.CONFIG_FACTORY_CLASSNAME)
 public class ESMTweaks {
 
 	public static final String MOD_ID = "esmtweaks";
 	public static final String SERVER_PROXY_CLASSNAME = "lirkas.esmtweaks.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASSNAME = "lirkas.esmtweaks.proxy.ClientProxy";
+	public static final String CONFIG_FACTORY_CLASSNAME = "lirkas.esmtweaks.config.ConfigScreenFactory";
 
 	@Instance
 	public static ESMTweaks instance;
