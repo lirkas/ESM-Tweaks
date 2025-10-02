@@ -2,7 +2,7 @@
   {
     "modid": "esmtweaks",
     "name": "Epic Siege Mod Tweaks",
-    "description": "Implements changes to ESM AI to improve compatibility.",
+    "description": "Implements changes to ESM AI to improve its compatibility with RotN.",
     "version": "${modVersion}",
     "mcversion": "${minecraftVersion}",
     "url": "",
@@ -13,6 +13,7 @@
     "screenshots": [],
     "useDependencyInformation": true,
     "requiredMods": ["epicsiegemod"],
-    "dependencies": ["epicsiegemod", "toolprogression"]
+    "dependencies": ["epicsiegemod", "toolprogression"],
+    "dependants": []
   }
 ]
