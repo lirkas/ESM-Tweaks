@@ -27,7 +27,7 @@ import lirkas.esmtweaks.util.Util;
 public class ModConfig {
     
     public static final String CONFIG_VERSION = "1.0";
-    public static final String CONFIG_FILEPATH = "config/.esmtweaks.cfg";
+    public static final String CONFIG_FILEPATH = "config/esmtweaks.cfg";
 
     public static Configuration configuration;
     static {
