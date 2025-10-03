@@ -203,6 +203,18 @@ public class ModConfig {
                 "with less destructive items such as swords."
             );
         }
+
+        public static ConfigProperty<String> loggingLevel = new ConfigProperty<String>(
+            "loggingLevel", CATEGORY_NAME, "ALL"
+        );
+        static {
+            loggingLevel.getProperty()
+                .setValidValues(
+                    new String[]{"OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"});
+            loggingLevel.setComment(
+                "Sets the global log level for this mod's logging messages."
+            );
+        }
     }
 
     /**
@@ -267,6 +279,7 @@ public class ModConfig {
         propertiesNames.add(Debug.showCanBreakBlockMessage.getName());
         propertiesNames.add(Debug.outputBlockInfoInChat.getName());
         propertiesNames.add(Debug.useOffhandItemForChecks.getName());
+        propertiesNames.add(Debug.loggingLevel.getName());
 
         configuration.setCategoryPropertyOrder(Debug.CATEGORY_NAME, propertiesNames);
 

@@ -62,9 +62,6 @@ Few other minor changes and improvements have been made, such as displaying bloc
 [**HIGH**] [FIX] Prevent mob to keep mining when its tool changes.
 
 [**MED**] [FEAT] Make delay between AI block breaking attempts configurable.
-[**MED**] [FEAT] Make all the debug console output disableable or removed for regular builds.
-
-[**LOW**] [FEAT] Better handling of config file when its class gets major edits.
 
 No plans to implement all of Epic Siege Mod AI or content into this mod as of now, 
 but it is something that can be achieved.

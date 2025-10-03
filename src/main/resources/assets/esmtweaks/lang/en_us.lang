@@ -20,3 +20,4 @@ lirkas.esmtweaks.config.enableDebug=Enable Debug
 lirkas.esmtweaks.config.displayBlockInfoInChat=Show Block Info In Chat
 lirkas.esmtweaks.config.displayCanBreakBlockMessage=Show Block Break Message
 lirkas.esmtweaks.config.useOffHandItem=Checks For Offhand Item
+lirkas.esmtweaks.config.loggingLevel=Logging Level

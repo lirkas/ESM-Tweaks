@@ -3,6 +3,8 @@ package lirkas.esmtweaks.event.handler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import org.apache.logging.log4j.Level;
+
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.config.ModConfig;
 
@@ -22,6 +24,9 @@ public class ConfigEventHandler {
 
             ESMTweaks.logger.debug("onConfigChanged");
             ModConfig.configuration.save();
+
+            ESMTweaks.logger.setLevel(Level.forName(ModConfig.Debug.loggingLevel.getValue(), 400));
+            ESMTweaks.logger.info("logging level set to " + ESMTweaks.logger.getLevel().name());
         }
     }
 }
