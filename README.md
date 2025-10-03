@@ -1,11 +1,12 @@
 # ESM AI Tweaks
 
 Changes AI behavior added by Epic Siege Mod and introduces few other additions/fixes to make it more "RotN-Compatible".
+Initially made for RotN, but can be used by itself and with other mods.
 
 Requires the following mod(s) to be enabled:
 - Epic Siege Mod (13.169)
 
-Initially made for RotN, but can be used by itself and with other mods.
+ToolProgression (1.12.2-1.6.12) is not required, but highly recommended, to make all the settings work properly.
 
 
 ## Mod Info
@@ -72,19 +73,26 @@ but gradle wrapper tasks should work fine in most CLI,
 as long as the required assets to download for the first time build are reacheable 
 (internet connection).
 
-#### Compiling the mod
+#### Compiling the mod:
 ```bash
 ./gradlew build
 ```
 
-#### Running Minecraft from the project
+#### Running Minecraft client from the project:
 ```bash
-./gradlew runclient
+./gradlew runclient -Pclient
 ```
+
+#### Running Minecraft server from the project:
+```bash
+./gradlew runserver -Pserver
+```
+
+The `--debug-jvm` option can be added to attach a debugger before the client/server starts running.
 
 Extra Mods to test with can either be put in the `libs/` folder or added from the `build.gradle` file.
 
-#### Extra Notes
+### Extra Notes
 
 ForgeGradle version used here is outdated (*2.3-SNAPSHOT*) and not supported anymore. 
 Various issues have taken place trying to make this project work with newer ones, 
