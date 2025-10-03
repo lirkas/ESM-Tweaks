@@ -30,6 +30,10 @@ minecraft {
     mappings = "${mcpMappings}"
     version = "${minecraftVersion}-${forgeVersionFG2Latest}"
 
+    // Puts the mod version into the main class to prevent FML warning about missing version
+    replace '%VERSION%', modVersion
+    replaceIn "ESMTweaks.java"
+
     // Uses dedicated folders when running client or server 
     // if "-Pclient" or "-Pserver" is passed as argument to gradle.
     if (project.hasProperty('client')) {
