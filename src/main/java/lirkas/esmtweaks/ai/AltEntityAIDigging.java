@@ -18,7 +18,6 @@ import net.minecraft.world.WorldServer;
 
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import funwayguy.epicsiegemod.ai.utils.AiUtils;
 import funwayguy.epicsiegemod.config.props.CfgProps;
@@ -40,10 +39,14 @@ public class AltEntityAIDigging extends EntityAIBase {
     private int digTick = 0;
     private BlockPos obsPos = null;
     private int obsTick = 0;
-    private int pauseIterations = 20; //could add a config option to edit this
 
     private boolean canHarvest = false;
     private IBlockState previousBlockState = null; //? is this really needed
+
+    // ticks between block searching attempts
+    public static int searchBlockInterval = 10;
+    // ticks between harvest checks during mining
+    public static int harvestCheckInterval = 20;
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
@@ -73,7 +76,11 @@ public class AltEntityAIDigging extends EntityAIBase {
             this.obsPos = null;
             return false;
         }
-        if (++this.obsTick < this.pauseIterations) {
+
+        ++this.obsTick;
+
+        // limits how often the mob looks for a block to break
+        if (this.obsTick % searchBlockInterval != 0) {
             return false;
         }
         this.curBlock = 
@@ -118,9 +125,10 @@ public class AltEntityAIDigging extends EntityAIBase {
         ESMTweaks.logger.debug("shouldContinueExecuting");
 
         if(this.target == null || this.curBlock == null || 
-            this.digger.getDistanceSq(this.curBlock) > 16.0 || !this.canHarvest || 
-            this.digger.world.getBlockState(this.curBlock) != this.previousBlockState) {
-                return false;
+                this.digger.getDistanceSq(this.curBlock) > 16.0 || !this.canHarvest || 
+                this.digger.world.getBlockState(this.curBlock) != this.previousBlockState ||
+                !this.digger.isEntityAlive()) {
+            return false;
         }
 
         return true;
@@ -130,16 +138,6 @@ public class AltEntityAIDigging extends EntityAIBase {
 	public void updateTask() {
 
         ESMTweaks.logger.debug("updateTask");
-
-        // this only works when the task receives an update after the mob dies
-        // which does not happen by default
-        if(!this.digger.isEntityAlive()) {
-
-            ESMTweaks.logger.debug("  isDead");
-            this.resetTask();
-
-            return;
-        }
 
 		this.digger.getLookHelper().setLookPosition(
             this.target.posX, this.target.posY + (double)this.target.getEyeHeight(), 
@@ -155,8 +153,15 @@ public class AltEntityAIDigging extends EntityAIBase {
 		
         this.previousBlockState = state;
 
+        // periodically checks if the block can still be broken
+        // this could probably go into shouldContinueExecuting() for clarity
+        if(this.digTick % harvestCheckInterval == 0) {
+            this.canHarvest = canHarvest(this.curBlock);
+        }
+        // this could probably go into shouldContinueExecuting() for clarity
 		if(this.digger.world.isAirBlock(this.curBlock)) {
 			this.resetTask();
+            return; // just for safety
 		}
         else if(str >= 1F) { // Block has been broken.
 
@@ -284,6 +289,9 @@ public class AltEntityAIDigging extends EntityAIBase {
         return false;
     }
 
+    /**
+     * Main method to check if this entity can harvest the block.
+     */
 	public boolean canHarvest(BlockPos pos) {
 
         // Original check handler
@@ -339,14 +347,4 @@ public class AltEntityAIDigging extends EntityAIBase {
         
         return this.canHarvest;
 	}
-
-    // This should be moved somewhere else ? to only allow one event watcher
-    public void onDeath(LivingDeathEvent event) {
-
-        // Resets the block state when the mob dies
-        if(event.getEntityLiving() == this.digger) {
-            ESMTweaks.logger.debug("ENTITY DIED");
-            this.resetTask();
-        }
-    }
 }

@@ -59,9 +59,7 @@ Few other minor changes and improvements have been made, such as displaying bloc
 
 ## Planned Features and Fixes
 
-[**HIGH**] [FIX] Prevent mob to keep mining when its tool changes.
-
-[**MED**] [FEAT] Make delay between AI block breaking attempts configurable.
+[**TOP**] [FIX] Server crash due to client side package access (l18n).
 
 No plans to implement all of Epic Siege Mod AI or content into this mod as of now, 
 but it is something that can be achieved.

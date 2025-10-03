@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.client.gui.GuiScreen;
 
 import net.minecraftforge.common.config.ConfigCategory;
@@ -11,6 +13,8 @@ import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
+import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.ai.AltEntityAIDigging;
 import lirkas.esmtweaks.util.Util;
 
 /**
@@ -151,6 +155,37 @@ public class ModConfig {
                     "0 = never gets one, 100 = always gets it."
                 );
             }
+
+            public static ConfigProperty<Integer> searchBlockInterval = new ConfigProperty<Integer>(
+                "searchBlockInterval", CATEGORY_NAME, 10
+            );
+            static {
+                searchBlockInterval.getProperty()
+                    .setMinValue(1)
+                    .setMaxValue(1200);
+                searchBlockInterval.setRequiredOptions(useTweakedAI);
+                searchBlockInterval.setComment(
+                    "Defines how many ticks the mob waits between each attempt to find a block to break. " +
+                    "Even if the block cannot be broken, each check counts as an attempt, which means " +
+                    "the mob waits again, and repeats this process until he finds a valid block or dies."
+                );
+            }
+
+            public static ConfigProperty<Integer> harvestCheckInterval = new ConfigProperty<Integer>(
+                "harvestCheckInterval", CATEGORY_NAME, 20
+            );
+            static {
+                harvestCheckInterval.getProperty()
+                    .setMinValue(1)
+                    .setMaxValue(600);
+                harvestCheckInterval.setRequiredOptions(useTweakedAI);
+                harvestCheckInterval.setComment(
+                    "Defines how often (in ticks) the periodical check to determine if the mob " +
+                    "is still capabale of harvesting the currently mined block is run. " +
+                    "As an example, if a mob were to break its tool while mining a block that requires it, " +
+                    "he is going to continue mining it (at reduced speed) for the set time."
+                );
+            }
         }
     }
 
@@ -224,6 +259,7 @@ public class ModConfig {
 
         setupConfigCategories();
         setupConfigProperties();
+        updateValues();
     }
 
     /**
@@ -266,6 +302,8 @@ public class ModConfig {
         propertiesNames.add(AI.Digging.useTweakedAI.getName());
         propertiesNames.add(AI.Digging.mustHaveCorrectTool.getName());
         propertiesNames.add(AI.Digging.checkBothHands.getName());
+        propertiesNames.add(AI.Digging.searchBlockInterval.getName());
+        propertiesNames.add(AI.Digging.harvestCheckInterval.getName());
         propertiesNames.add(AI.Digging.canGetExtraTool.getName());
         propertiesNames.add(AI.Digging.extraToolOverride.getName());
         propertiesNames.add(AI.Digging.extraToolChance.getName());
@@ -285,6 +323,21 @@ public class ModConfig {
 
         // saving previous changes
         configuration.save();
+    }
+
+    /**
+     * Updates values that need to be set from the config when it changes.
+     */
+    public static void updateValues() {
+        // updates the logging level if it has changed
+        if(!ModConfig.Debug.loggingLevel.getValue().equals(ESMTweaks.logger.getLevel().name())) {
+            ESMTweaks.logger.setLevel(Level.forName(ModConfig.Debug.loggingLevel.getValue(), 400));
+            ESMTweaks.logger.info("logging level set to " + ESMTweaks.logger.getLevel().name());
+        }
+        
+        // update digging ai values
+        AltEntityAIDigging.harvestCheckInterval = ModConfig.AI.Digging.harvestCheckInterval.getValue();
+        AltEntityAIDigging.searchBlockInterval = ModConfig.AI.Digging.searchBlockInterval.getValue();
     }
 
     /**
