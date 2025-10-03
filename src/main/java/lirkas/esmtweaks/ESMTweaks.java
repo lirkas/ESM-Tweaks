@@ -1,7 +1,6 @@
 package lirkas.esmtweaks;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,6 +10,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 import lirkas.esmtweaks.proxy.IProxy;
 
@@ -25,7 +27,7 @@ public class ESMTweaks {
 
 	@Instance
 	public static ESMTweaks instance;
-	public static Logger logger = LogManager.getLogger();
+	public static Logger logger = (Logger) LogManager.getLogger(MOD_ID);
 
 	@SidedProxy(serverSide = SERVER_PROXY_CLASSNAME, clientSide = CLIENT_PROXY_CLASSNAME)
 	public static IProxy proxy;

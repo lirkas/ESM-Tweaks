@@ -6,6 +6,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.Logger;
+
 import funwayguy.epicsiegemod.ai.additions.AdditionDigger;
 
 import lirkas.esmtweaks.ESMTweaks;
@@ -13,13 +16,16 @@ import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
 import lirkas.esmtweaks.ai.registrar.AITaskRegistrar;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.event.registrar.CommonEventHandlerRegistrar;
+import lirkas.esmtweaks.util.Util;
 
 
 public abstract class CommonProxy implements IProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        ESMTweaks.logger = event.getModLog();
+        ESMTweaks.logger = (Logger) event.getModLog();
+        ESMTweaks.logger.setLevel(Level.forName(Util.getManifestValue("LogLevel", "ERROR"), 800));
+
         ESMTweaks.logger.debug("CommonProxy preInit");
 
         ModConfig.init();

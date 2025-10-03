@@ -83,3 +83,24 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+jar {
+
+    def logLevel = "ALL"
+
+    // -Prelease
+    if (project.hasProperty('release')) {
+        logLevel = "INFO"
+    }
+    else {
+        logLevel = "ALL"
+        classifier "dev"
+    }
+    
+    manifest {
+        attributes(
+            // This sets the log level for this mod's logger
+            "LogLevel": "${logLevel}" 
+        )
+    }
+}

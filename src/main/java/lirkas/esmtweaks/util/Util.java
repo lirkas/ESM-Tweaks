@@ -1,6 +1,12 @@
 package lirkas.esmtweaks.util;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -54,5 +60,48 @@ public class Util {
             return I18n.format(languageKey);
         else
             return defaultValue;
+    }
+
+    /**
+     * Retreives a value set in this mod's jar manifest (META-INF/MANIFEST.MF).
+     * 
+     * @param propertyName The key under which the value is set in the manifest.
+     * @param defaultValue The value to return if the property could not be found.
+     * @return The value found in the manifest or defaultValue otherwise.
+     */
+    public static String getManifestValue(String propertyName, String defaultValue) {
+        
+        String className = "/" + Util.class.getName().replace(".", "/") + ".class";
+
+        if(Util.class.getClass().getResource(className) == null) {
+            return defaultValue;
+        }
+        String classPath = Util.class.getClass().getResource(className).toString();
+
+        if (!classPath.startsWith("jar")) {
+            return defaultValue;
+        }
+        
+        URL url;
+        try {
+            url = new URL(classPath);
+        } catch (MalformedURLException exception) {
+            exception.printStackTrace();
+            return defaultValue;
+        }
+
+        JarURLConnection jarConnection;
+        Manifest manifest;
+        try {
+            jarConnection = (JarURLConnection) url.openConnection();
+            manifest = jarConnection.getManifest();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return defaultValue;
+        }
+
+        Attributes attributes = manifest.getMainAttributes();
+
+        return attributes.getValue(propertyName);
     }
 }
