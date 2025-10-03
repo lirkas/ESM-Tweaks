@@ -143,7 +143,7 @@ public class ModConfig {
             }
 
             public static ConfigProperty<Integer> extraToolChance = new ConfigProperty<Integer>(
-                "extraToolChance", CATEGORY_NAME, 0
+                "extraToolChance", CATEGORY_NAME, 25
             );
             static {
                 extraToolChance.getProperty()
