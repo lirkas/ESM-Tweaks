@@ -14,8 +14,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import lirkas.esmtweaks.ESMTweaks;
-
 
 public class Util {
     
