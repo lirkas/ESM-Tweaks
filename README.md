@@ -59,7 +59,7 @@ Few other minor changes and improvements have been made, such as displaying bloc
 
 ## Planned Features and Fixes
 
-[**TOP**] [FIX] Server crash due to client side package access (l18n).
+None Yet.
 
 No plans to implement all of Epic Siege Mod AI or content into this mod as of now, 
 but it is something that can be achieved.

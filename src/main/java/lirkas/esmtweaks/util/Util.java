@@ -11,6 +11,11 @@ import java.util.jar.Manifest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+
+import lirkas.esmtweaks.ESMTweaks;
+
 
 public class Util {
     
@@ -55,8 +60,8 @@ public class Util {
      */
     public static String getTranslationOrDefault(String languageKey, String defaultValue) {
 
-        // protects against language keys that are not defined in the .lang file
-        if (!I18n.format(languageKey).equals(languageKey))
+        // makes sure its called from the client and that the key exists
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT && !I18n.format(languageKey).equals(languageKey))
             return I18n.format(languageKey);
         else
             return defaultValue;
