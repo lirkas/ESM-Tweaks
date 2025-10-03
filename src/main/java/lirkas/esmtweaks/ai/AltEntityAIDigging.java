@@ -56,7 +56,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 
-        ESMTweaks.logger.debug("shouldExecute");
+        ESMTweaks.logger.trace("shouldExecute");
 
 		this.target = this.digger.getAttackTarget();
         if (this.target == null || !this.target.isEntityAlive() || !this.digger.getNavigator().noPath()) {
@@ -93,7 +93,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 
-        ESMTweaks.logger.debug("startExecuting");
+        ESMTweaks.logger.trace("startExecuting");
 		super.startExecuting();
 		this.digger.getNavigator().clearPath();
 		this.obsTick = 0;
@@ -103,7 +103,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void resetTask() {
 
-        ESMTweaks.logger.debug("resetTask");
+        ESMTweaks.logger.trace("resetTask");
 
         if(this.curBlock != null) {
             // this remove the breaking texture if the entity stops breaking for any reason
@@ -122,7 +122,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public boolean shouldContinueExecuting() {
 
-        ESMTweaks.logger.debug("shouldContinueExecuting");
+        ESMTweaks.logger.trace("shouldContinueExecuting");
 
         if(this.target == null || this.curBlock == null || 
                 this.digger.getDistanceSq(this.curBlock) > 16.0 || !this.canHarvest || 
@@ -137,7 +137,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void updateTask() {
 
-        ESMTweaks.logger.debug("updateTask");
+        ESMTweaks.logger.trace("updateTask");
 
 		this.digger.getLookHelper().setLookPosition(
             this.target.posX, this.target.posY + (double)this.target.getEyeHeight(), 
@@ -194,7 +194,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	
 	public BlockPos getNextBlock(EntityLivingBase target, double dist) {
 
-        ESMTweaks.logger.debug("getNextBlock");
+        ESMTweaks.logger.trace("getNextBlock");
 
         int digWidth = MathHelper.ceil(this.digger.width);
         int digHeight = MathHelper.ceil(this.digger.height);
@@ -301,7 +301,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             return this.canHarvest;
         }
 
-        ESMTweaks.logger.debug("canHarvest");
+        ESMTweaks.logger.trace("canHarvest");
 
         IBlockState state = this.digger.world.getBlockState(pos);
         

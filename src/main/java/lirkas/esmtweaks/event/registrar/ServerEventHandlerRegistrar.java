@@ -12,21 +12,21 @@ public class ServerEventHandlerRegistrar implements IEventHandlerRegistrar {
 
     @Override
     public void registerAllEventHandlers() {
-        ESMTweaks.logger.debug("ServerEventHandlerRegistrar registerAllEventHandlers");
+        ESMTweaks.logger.trace("ServerEventHandlerRegistrar registerAllEventHandlers");
     }
 
     @Override
     public void unregisterAllEventHandlers() {
-        ESMTweaks.logger.debug("ServerEventHandlerRegistrar unregisterAllEventHandlers");
+        ESMTweaks.logger.trace("ServerEventHandlerRegistrar unregisterAllEventHandlers");
     }
 
     @Override
     public void registerEventHandler(Object eventHandler) {
-        ESMTweaks.logger.debug("ServerEventHandlerRegistrar registerEventHandler");
+        ESMTweaks.logger.trace("ServerEventHandlerRegistrar registerEventHandler");
     }
 
     @Override
     public void unregisterEventHanlder(Object eventHandler) {
-        ESMTweaks.logger.debug("ServerEventHandlerRegistrar unregisterEventHanlder");
+        ESMTweaks.logger.trace("ServerEventHandlerRegistrar unregisterEventHanlder");
     }
 }

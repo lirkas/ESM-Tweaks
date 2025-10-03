@@ -15,22 +15,22 @@ public class ClientEventHandlerRegistrar extends CommonEventHandlerRegistrar {
 
     @Override
     public void registerAllEventHandlers() {
-        ESMTweaks.logger.debug("ClientEventHandlerRegistrar registerAllEventHandlers");
+        ESMTweaks.logger.trace("ClientEventHandlerRegistrar registerAllEventHandlers");
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
     }
 
     @Override
     public void unregisterAllEventHandlers() {
-        ESMTweaks.logger.debug("ClientEventHandlerRegistrar unregisterAllEventHandlers");
+        ESMTweaks.logger.trace("ClientEventHandlerRegistrar unregisterAllEventHandlers");
     }
 
     @Override
     public void registerEventHandler(Object eventHandler) {
-        ESMTweaks.logger.debug("ClientEventHandlerRegistrar registerEventHandler");
+        ESMTweaks.logger.trace("ClientEventHandlerRegistrar registerEventHandler");
     }
 
     @Override
     public void unregisterEventHanlder(Object eventHandler) {
-        ESMTweaks.logger.debug("ClientEventHandlerRegistrar unregisterEventHanlder");
+        ESMTweaks.logger.trace("ClientEventHandlerRegistrar unregisterEventHanlder");
     }
 }

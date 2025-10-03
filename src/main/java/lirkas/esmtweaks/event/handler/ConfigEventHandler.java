@@ -20,7 +20,7 @@ public class ConfigEventHandler {
 
         if(event.getModID().equals(ESMTweaks.MOD_ID)) {
 
-            ESMTweaks.logger.debug("onConfigChanged");
+            ESMTweaks.logger.trace("onConfigChanged");
             ModConfig.updateValues();
             ModConfig.configuration.save();
         }

@@ -26,7 +26,7 @@ public abstract class CommonProxy implements IProxy {
         ESMTweaks.logger = (Logger) event.getModLog();
         ESMTweaks.logger.setLevel(Level.forName(Util.getManifestValue("LogLevel", "ERROR"), 800));
 
-        ESMTweaks.logger.debug("CommonProxy preInit");
+        ESMTweaks.logger.trace("CommonProxy preInit");
 
         ModConfig.init();
 
@@ -39,17 +39,17 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        ESMTweaks.logger.debug("CommonProxy init");
+        ESMTweaks.logger.trace("CommonProxy init");
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        ESMTweaks.logger.debug("CommonProxy postInit");
+        ESMTweaks.logger.trace("CommonProxy postInit");
     }
 
     @Override
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
-        ESMTweaks.logger.debug("CommonProxy serverAboutToStart");
+        ESMTweaks.logger.trace("CommonProxy serverAboutToStart");
         
         if(ModConfig.AI.Digging.useTweakedAI.getValue()) {
             AITaskRegistrar.unregisterTasks(AdditionDigger.class);

@@ -58,14 +58,14 @@ public class EntityEventHandler {
 
         EntityLiving entityLiving = (EntityLiving) event.getEntity();
 
-        ESMTweaks.logger.debug("onEntityConstruct " + entityLiving.getName());
+        ESMTweaks.logger.trace("onEntityConstruct " + entityLiving.getName());
 
         // should not be called if ESM onEntityConstruct is still registered as a listener
         new MainHandler().onEntityConstruct(event);
 
-        ESMTweaks.logger.debug("Tasks : ");
+        ESMTweaks.logger.trace("Tasks : ");
         for(String taskName : EntityUtil.getAITasks(entityLiving, true)) {
-            ESMTweaks.logger.debug("    " + taskName);
+            ESMTweaks.logger.trace("    " + taskName);
         }
     }
 
@@ -80,7 +80,7 @@ public class EntityEventHandler {
             return;
         }
 
-        ESMTweaks.logger.debug("onEntityLivingSpawn "  + event.getEntity().getName());
+        ESMTweaks.logger.trace("onEntityLivingSpawn "  + event.getEntity().getName());
 
         EntityLiving entityLiving = (EntityLiving) event.getEntityLiving();
 

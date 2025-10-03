@@ -16,19 +16,19 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        ESMTweaks.logger.debug("ClientProxy preInit");
+        ESMTweaks.logger.trace("ClientProxy preInit");
         ClientEventHandlerRegistrar.INSTANCE.registerAllEventHandlers();
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        ESMTweaks.logger.debug("ClientProxy init");
+        ESMTweaks.logger.trace("ClientProxy init");
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        ESMTweaks.logger.debug("ClientProxy postInit");
+        ESMTweaks.logger.trace("ClientProxy postInit");
     }
 }

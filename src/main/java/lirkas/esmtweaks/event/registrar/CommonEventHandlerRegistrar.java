@@ -18,25 +18,25 @@ public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
 
     @Override
     public void registerAllEventHandlers() {
-        ESMTweaks.logger.debug("CommonEventHandlerRegistrar registerAllEventHandlers");
+        ESMTweaks.logger.trace("CommonEventHandlerRegistrar registerAllEventHandlers");
         MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
     }
 
     @Override
     public void unregisterAllEventHandlers() {
-        ESMTweaks.logger.debug("CommonEventHandlerRegistrar unregisterAllEventHandlers");
+        ESMTweaks.logger.trace("CommonEventHandlerRegistrar unregisterAllEventHandlers");
     }
 
     @Override
     public void registerEventHandler(Object eventHandler) {
-        ESMTweaks.logger.debug("CommonEventHandlerRegistrar registerEventHandler");
+        ESMTweaks.logger.trace("CommonEventHandlerRegistrar registerEventHandler");
         MinecraftForge.EVENT_BUS.register(eventHandler);
     }
 
     @Override
     public void unregisterEventHanlder(Object eventHandler) {
-        ESMTweaks.logger.debug("CommonEventHandlerRegistrar unregisterEventHanlder");
+        ESMTweaks.logger.trace("CommonEventHandlerRegistrar unregisterEventHanlder");
         MinecraftForge.EVENT_BUS.unregister(eventHandler);
     }
 
@@ -55,7 +55,7 @@ public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
         try {
             tmpEvent = eventClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            ESMTweaks.logger.error("unregisterEventHanlder : cannot instanciate " + eventClass.getSimpleName());
+            ESMTweaks.logger.error("unregisterEventHanlder : cannot instaniate " + eventClass.getSimpleName());
             e.printStackTrace();
             return;
         }
@@ -74,11 +74,11 @@ public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
                 //MinecraftForge.EVENT_BUS.unregister(listener);
                 tmpEvent.getListenerList().unregister(0, listener);
                 
-                ESMTweaks.logger.debug("unregisterEventHanlder : unregistered " + classpath + ":" + methodName);
+                ESMTweaks.logger.info("unregisterEventHanlder : unregistered " + classpath + ":" + methodName);
                 return;
             }
         }
 
-        ESMTweaks.logger.info("unregisterEventHanlder : did not find anything to unregister");
+        ESMTweaks.logger.warn("unregisterEventHanlder : did not find anything to unregister");
     }
 }
