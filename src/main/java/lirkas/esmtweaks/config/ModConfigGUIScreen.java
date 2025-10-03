@@ -10,7 +10,7 @@ import lirkas.esmtweaks.ESMTweaks;
 public class ModConfigGUIScreen extends GuiConfig {
 
     public ModConfigGUIScreen(GuiScreen parentScreen) {
-        super(parentScreen, 
-        ModConfig.getConfigElements(parentScreen), ESMTweaks.MOD_ID, false, false, "ESM Tweaks Config Screen");
+        super(parentScreen, ModConfig.getConfigElements(parentScreen), 
+                ESMTweaks.MOD_ID, false, false, "ESM Tweaks Config - " + ModConfig.CONFIG_FILEPATH);
     }
 }
