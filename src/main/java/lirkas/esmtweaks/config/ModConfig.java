@@ -48,7 +48,7 @@ public class ModConfig {
             public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, AI.configCategory);
 
             public static ConfigProperty<Boolean> updateAITaskOnDeath = new ConfigProperty<Boolean>(
-                "updateAITaskOnDeath", CATEGORY_NAME, false
+                "updateAITaskOnDeath", CATEGORY_NAME, true
             );
             static {
                 updateAITaskOnDeath.setComment(
@@ -157,7 +157,7 @@ public class ModConfig {
             }
 
             public static ConfigProperty<Integer> searchBlockInterval = new ConfigProperty<Integer>(
-                "searchBlockInterval", CATEGORY_NAME, 10
+                "searchBlockInterval", CATEGORY_NAME, 1
             );
             static {
                 searchBlockInterval.getProperty()
