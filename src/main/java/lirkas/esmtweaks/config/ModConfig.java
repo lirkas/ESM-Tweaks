@@ -28,6 +28,7 @@ public class ModConfig {
     
     public static final String CONFIG_VERSION = "1.0";
     public static final String CONFIG_FILEPATH = "config/esmtweaks.cfg";
+    public static final String MF_LOGLEVEL = "LogLevel";
 
     public static Configuration configuration;
     static {
@@ -240,7 +241,7 @@ public class ModConfig {
         }
 
         public static ConfigProperty<String> loggingLevel = new ConfigProperty<String>(
-            "loggingLevel", CATEGORY_NAME, "ALL"
+            "loggingLevel", CATEGORY_NAME, Util.getManifestValue(MF_LOGLEVEL, "INFO")
         );
         static {
             loggingLevel.getProperty()

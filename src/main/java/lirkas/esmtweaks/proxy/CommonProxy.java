@@ -24,7 +24,7 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ESMTweaks.logger = (Logger) event.getModLog();
-        ESMTweaks.logger.setLevel(Level.forName(Util.getManifestValue("LogLevel", "ERROR"), 800));
+        ESMTweaks.logger.setLevel(Level.forName(Util.getManifestValue("LogLevel", "INFO"), 400));
 
         ESMTweaks.logger.trace("CommonProxy preInit");
 
