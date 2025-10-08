@@ -59,6 +59,11 @@ It used to sometimes be stuck at the last mining progress until the block was up
 Few other minor changes and improvements have been made, such as displaying block and tool infos in-game for block breaking tests and debugging, or fixing the AI assignement process being sometimes done twice for each entity.
 
 
+## Installation
+
+Download the .jar file from [Releases](https://github.com/lirkas/esm-tweaks/releases/latest) and put it in the `minecraft/mods` folder.
+
+
 ## Planned Features and Fixes
 
 See [Todo](/docs/TODO.md).
