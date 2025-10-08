@@ -1,9 +1,13 @@
 package lirkas.esmtweaks.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -238,6 +242,91 @@ public class HarvestUtil {
         double timeToBreak = ticks / 20;
 
         return timeToBreak;
+    }
+
+    /**
+     * Vanilla-ish method to calculate the digging speed for this entity held item.
+     * 
+     * @param entity The digging entity.
+     * @param enumHand The hand used to mine this block.
+     * @param blockPos The block to dig.
+     * @return The digging speed for this block.
+     */
+    public static float getDiggingSpeed(EntityLivingBase entity, EnumHand enumHand, BlockPos blockPos) {
+        
+        World world = entity.world;
+        IBlockState state = world.getBlockState(blockPos);
+        ItemStack heldItem = entity.getHeldItem(enumHand);
+        
+        float diggingSpeed = heldItem.isEmpty()? 1F : heldItem.getDestroySpeed(state);
+        
+        if (diggingSpeed > 1.0F) {
+            int efficiencyModifier = EnchantmentHelper.getEfficiencyModifier(entity);
+
+            if (efficiencyModifier > 0 && !heldItem.isEmpty()) {
+                diggingSpeed += (float)(efficiencyModifier * efficiencyModifier + 1);
+            }
+        }
+
+        if (entity.isPotionActive(MobEffects.HASTE)) {
+            diggingSpeed *= 1.0F + (float)(entity.getActivePotionEffect(MobEffects.HASTE).getAmplifier() + 1) * 0.2F;
+        }
+
+        if (entity.isPotionActive(MobEffects.MINING_FATIGUE)) {
+            float fatigueModifier;
+
+            switch (entity.getActivePotionEffect(MobEffects.MINING_FATIGUE).getAmplifier())
+            {
+                case 0:
+                    fatigueModifier = 0.3F;
+                    break;
+                case 1:
+                    fatigueModifier = 0.09F;
+                    break;
+                case 2:
+                    fatigueModifier = 0.0027F;
+                    break;
+                case 3:
+                default:
+                    fatigueModifier = 8.1E-4F;
+            }
+
+            diggingSpeed *= fatigueModifier;
+        }
+
+        if (entity.isInsideOfMaterial(Material.WATER) && !EnchantmentHelper.getAquaAffinityModifier(entity)) {
+            diggingSpeed /= 5.0F;
+        }
+
+        if (!entity.onGround) {
+            diggingSpeed /= 5.0F;
+        }
+        
+        return (diggingSpeed < 0 ? 0 : diggingSpeed);
+    }
+
+    /**
+     * Gets this block strength based on the entity mining it.
+     * 
+     * @param entity The digging entity.
+     * @param enumHand The hand used to mine this block.
+     * @param blockPos The block to dig.
+     * @return This block strength.
+     */
+    public static float getBlockStrength(EntityLivingBase entity, EnumHand enumHand, BlockPos pos) {
+
+        World world = entity.world;
+        IBlockState blockState = world.getBlockState(pos);
+        float hardness = blockState.getBlockHardness(world, pos);
+        
+        if(hardness <= 0F) {
+            return 0F;
+        }
+        
+        ItemStack heldItem = entity.getHeldItem(enumHand);
+        boolean canHarvest = blockState.getMaterial().isToolNotRequired() || (!heldItem.isEmpty() && heldItem.canHarvestBlock(blockState));
+        
+        return getDiggingSpeed(entity, enumHand, pos) / hardness / (canHarvest? 30F : 100F);
     }
 
     /**

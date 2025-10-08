@@ -19,7 +19,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-import funwayguy.epicsiegemod.ai.utils.AiUtils;
 import funwayguy.epicsiegemod.config.props.CfgProps;
 
 import lirkas.esmtweaks.ESMTweaks;
@@ -39,24 +38,28 @@ public class AltEntityAIDigging extends EntityAIBase {
     private int digTick = 0;
     private BlockPos obsPos = null;
     private int obsTick = 0;
+    private EnumHand diggingHand;
 
     private boolean canHarvest = false;
     private IBlockState previousBlockState = null; //? is this really needed
 
     // ticks between block searching attempts
-    public static int searchBlockInterval = 10;
+    public static int searchBlockInterval = 1;
     // ticks between harvest checks during mining
     public static int harvestCheckInterval = 20;
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
         this.digger = digger;
+        this.diggingHand = EnumHand.MAIN_HAND;
 	}
 	
 	@Override
 	public boolean shouldExecute() {
 
-        ESMTweaks.logger.trace("shouldExecute");
+        ESMTweaks.logger.trace("shouldExecute " + this.digger.getName() + " (" + 
+            this.digger.getHeldItemMainhand().getDisplayName() + " - " +
+            this.digger.getHeldItemOffhand().getDisplayName() + ")");
 
 		this.target = this.digger.getAttackTarget();
         if (this.target == null || !this.target.isEntityAlive() || !this.digger.getNavigator().noPath()) {
@@ -77,7 +80,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             return false;
         }
 
-        ++this.obsTick;
+        this.obsTick++;
 
         // limits how often the mob looks for a block to break
         if (this.obsTick % searchBlockInterval != 0) {
@@ -93,7 +96,8 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 
-        ESMTweaks.logger.trace("startExecuting");
+        ESMTweaks.logger.trace("startExecuting : " + this.digger.getName());
+
 		super.startExecuting();
 		this.digger.getNavigator().clearPath();
 		this.obsTick = 0;
@@ -103,7 +107,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void resetTask() {
 
-        ESMTweaks.logger.trace("resetTask");
+        ESMTweaks.logger.trace("resetTask : " + this.digger.getName());
 
         if(this.curBlock != null) {
             // this remove the breaking texture if the entity stops breaking for any reason
@@ -117,12 +121,16 @@ public class AltEntityAIDigging extends EntityAIBase {
         this.obsPos = null;
         this.canHarvest = false;
         this.previousBlockState = null;
+        this.diggingHand = EnumHand.MAIN_HAND;
 	}
 	
 	@Override
 	public boolean shouldContinueExecuting() {
 
-        ESMTweaks.logger.trace("shouldContinueExecuting");
+        ESMTweaks.logger.trace("shouldContinueExecuting : " + this.digger.getName() + " with (" + 
+            this.digger.getHeldItemMainhand().getDisplayName() + " - " +
+            this.digger.getHeldItemOffhand().getDisplayName() + ") on " +
+            (this.curBlock == null ? "null" : this.digger.world.getBlockState(this.curBlock).getBlock().getLocalizedName()));
 
         if(this.target == null || this.curBlock == null || 
                 this.digger.getDistanceSq(this.curBlock) > 16.0 || !this.canHarvest || 
@@ -137,7 +145,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 	@Override
 	public void updateTask() {
 
-        ESMTweaks.logger.trace("updateTask");
+        ESMTweaks.logger.trace("updateTask : " + this.digger.getName());
 
 		this.digger.getLookHelper().setLookPosition(
             this.target.posX, this.target.posY + (double)this.target.getEyeHeight(), 
@@ -147,8 +155,8 @@ public class AltEntityAIDigging extends EntityAIBase {
 		
 		this.digTick++;
 
-        float str = AiUtils.getBlockStrength(this.digger, this.digger.world, this.curBlock) * ((float)this.digTick + 1.0f);
-		ItemStack heldItem = this.digger.getHeldItem(EnumHand.MAIN_HAND);
+        float str = HarvestUtil.getBlockStrength(this.digger, this.diggingHand, this.curBlock) * ((float)this.digTick + 1.0f);
+		ItemStack heldItem = this.digger.getHeldItem(this.diggingHand);
 		IBlockState state = this.digger.world.getBlockState(this.curBlock);
 		
         this.previousBlockState = state;
@@ -158,6 +166,7 @@ public class AltEntityAIDigging extends EntityAIBase {
         if(this.digTick % harvestCheckInterval == 0) {
             this.canHarvest = canHarvest(this.curBlock);
         }
+
         // this could probably go into shouldContinueExecuting() for clarity
 		if(this.digger.world.isAirBlock(this.curBlock)) {
 			this.resetTask();
@@ -165,16 +174,19 @@ public class AltEntityAIDigging extends EntityAIBase {
 		}
         else if(str >= 1F) { // Block has been broken.
 
-			// boolean canHarvest = state.getMaterial().isToolNotRequired() || (!heldItem.isEmpty() && heldItem.canHarvestBlock(state));
-            boolean canHarvest = this.canHarvest;
-
+            // when param2 == true, the block is dropped as an item (harvest)
 			this.digger.world.destroyBlock(this.curBlock, false);
 
-            if (canHarvest && this.digger.world instanceof WorldServer) {
+            if (this.canHarvest && this.digger.world instanceof WorldServer) {
+                // this could be replaced with :
+                //      this.digger.world.destroyBlock(this.curBlock, true);
+                // but it will not check for silk touch enchant if present on the tool
+                // as the code below current does.
+                //
                 // should ideally get rid of FakePlayer stuffs, but need to figure out what all this does
                 // and if another way of achieving this is possible (Forge docs says FakePlayer may cause world leaking issue)
                 FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)((WorldServer)this.digger.world));
-                player.setHeldItem(EnumHand.MAIN_HAND, heldItem);
+                player.setHeldItem(EnumHand.MAIN_HAND, this.digger.getHeldItem(EnumHand.MAIN_HAND));
                 player.setHeldItem(EnumHand.OFF_HAND, this.digger.getHeldItem(EnumHand.OFF_HAND));
                 player.setPosition((double)this.digger.getPosition().getX(), (double)this.digger.getPosition().getY(), (double)this.digger.getPosition().getZ());
                 TileEntity tile = this.digger.world.getTileEntity(this.curBlock);
@@ -187,14 +199,17 @@ public class AltEntityAIDigging extends EntityAIBase {
         else if(digTick % 5 == 0) { // Just keeping digging...
 
 			this.digger.world.playSound(null, this.curBlock, state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
-			this.digger.swingArm(EnumHand.MAIN_HAND);
+			this.digger.swingArm(this.diggingHand);
 			this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, (int)(str * 10F));
 		}
 	}
 	
+    /**
+     * Looking for the next block to break to get to reach its target.
+     */
 	public BlockPos getNextBlock(EntityLivingBase target, double dist) {
 
-        ESMTweaks.logger.trace("getNextBlock");
+        ESMTweaks.logger.trace("getNextBlock : " + this.digger.getName());
 
         int digWidth = MathHelper.ceil(this.digger.width);
         int digHeight = MathHelper.ceil(this.digger.height);
@@ -212,6 +227,8 @@ public class AltEntityAIDigging extends EntityAIBase {
         double rayZ = (double)z + Math.floor(this.digger.posZ) + 0.5 - (double)digWidth / 2.0;
 
         Vec3d rayOrigin = new Vec3d(rayX, rayY, rayZ);
+        // could this (+0.5) be what cause this mob to dig the block on its right instead of in front of it
+        // when the player is in front ? (in a 2x1 tunnel situation)
         Vec3d rayOffset = new Vec3d(
 			Math.floor(target.posX) + 0.5, 
 			Math.floor(target.posY) + 0.5, 
@@ -225,15 +242,15 @@ public class AltEntityAIDigging extends EntityAIBase {
         }
         rayOffset = rayOrigin.add(norm.scale(dist)); // unsure about add (could be subtract)
         
-		BlockPos p1 = this.digger.getPosition();
-		BlockPos p2 = target.getPosition();
+		BlockPos diggerPos = this.digger.getPosition();
+		BlockPos targetPos = target.getPosition();
 
-        if (p1.getDistance(p2.getX(), p1.getY(), p2.getZ()) < 4.0) {
+        if (diggerPos.getDistance(targetPos.getX(), diggerPos.getY(), targetPos.getZ()) < 4.0) {
             
-            if ((double)(p2.getY() - p1.getY()) > 2.0) {
+            if ((double)(targetPos.getY() - diggerPos.getY()) > 2.0) {
                 rayOffset = rayOrigin.add(0.0, dist, 0.0);
             } 
-            else if ((double)(p2.getY() - p1.getY()) < -2.0) {
+            else if ((double)(targetPos.getY() - diggerPos.getY()) < -2.0) {
                 rayOffset = rayOrigin.add(0.0, -dist, 0.0);
             }
         }
@@ -277,12 +294,14 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         ItemStack mainHandItem = this.digger.getHeldItem(EnumHand.MAIN_HAND);
         if(HarvestUtil.canBreakWithItem(mainHandItem, blockState)) {
+            this.diggingHand = EnumHand.MAIN_HAND;
             return true;
         }
 
         if(ModConfig.AI.Digging.checkBothHands.getValue()) {
             ItemStack offHandItem = this.digger.getHeldItem(EnumHand.OFF_HAND);
             if(HarvestUtil.canBreakWithItem(offHandItem, blockState)) {
+                this.diggingHand = EnumHand.OFF_HAND;
                 return true;
             }
         }
@@ -301,7 +320,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             return this.canHarvest;
         }
 
-        ESMTweaks.logger.trace("canHarvest");
+        ESMTweaks.logger.trace("canHarvest : " + this.digger.getName());
 
         IBlockState state = this.digger.world.getBlockState(pos);
         
