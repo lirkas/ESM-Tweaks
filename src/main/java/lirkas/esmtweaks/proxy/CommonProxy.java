@@ -21,7 +21,6 @@ import lirkas.esmtweaks.util.Util;
 
 public abstract class CommonProxy implements IProxy {
 
-
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ESMTweaks.logger = (Logger) event.getModLog();

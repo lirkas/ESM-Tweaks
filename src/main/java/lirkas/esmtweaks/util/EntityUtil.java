@@ -26,7 +26,6 @@ public class EntityUtil {
                 taskEntry.action.getClass().getSimpleName()
             );
         }
-
         return taskNames;
     } 
 }

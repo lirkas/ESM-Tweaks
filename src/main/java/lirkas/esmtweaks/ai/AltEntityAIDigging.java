@@ -363,7 +363,6 @@ public class AltEntityAIDigging extends EntityAIBase {
         else {
             this.canHarvest = true;
         }
-        
         return this.canHarvest;
 	}
 }

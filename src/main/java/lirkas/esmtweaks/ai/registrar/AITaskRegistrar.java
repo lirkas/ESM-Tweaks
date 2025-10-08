@@ -62,5 +62,4 @@ public class AITaskRegistrar {
     public static void unregisterTask(Class<? extends ITaskAddition> taskClass) {
         unregisterTasks(taskClass, false);
     }
-    
 }

@@ -207,7 +207,7 @@ public class ConfigProperty<T> {
         
         List<ConfigProperty<?>> configProperties = new ArrayList<ConfigProperty<?>>();
 
-        for(Field field : cls.getDeclaredFields()){
+        for(Field field : cls.getDeclaredFields()) {
             if(field.getType() == ConfigProperty.class) {
                 try {
                     configProperties.add((ConfigProperty<?>)field.get(null));
@@ -221,7 +221,7 @@ public class ConfigProperty<T> {
 
     public static void setupPropertiesFromClass(Class<?> cls, Configuration configuration) {
         
-        for(ConfigProperty<?> configProperty : getConfigPropertiesFromClass(cls)){
+        for(ConfigProperty<?> configProperty : getConfigPropertiesFromClass(cls)) {
             configProperty.setConfiguration(configuration);
         }
     }

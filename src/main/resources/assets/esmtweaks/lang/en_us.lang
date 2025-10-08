@@ -1,7 +1,7 @@
 lirkas.esmtweaks.config.category.AI=AI Settings
 lirkas.esmtweaks.config.category.AI.tooltip=Options related to AI behavior in worlds.
 lirkas.esmtweaks.config.category.AI.General=General AI Settings
-lirkas.esmtweaks.config.category.AI.General.tooltip=
+lirkas.esmtweaks.config.category.AI.General.tooltip=Various AI Settings
 lirkas.esmtweaks.config.category.AI.Digging=Digging AI Settings
 lirkas.esmtweaks.config.category.AI.Digging.tooltip=Options related to the Digging AI.
 lirkas.esmtweaks.config.category.Debug=Debug Settings
