@@ -19,8 +19,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-import funwayguy.epicsiegemod.config.props.CfgProps;
-
+// import funwayguy.epicsiegemod.config.props.CfgProps;
+import funwayguy.epicsiegemod.core.ESM_Settings;
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.util.HarvestUtil;
@@ -263,8 +263,7 @@ public class AltEntityAIDigging extends EntityAIBase {
             // could remove the right side of this AND condition after some verification and testing,
             // since the same check is done inside canHarvest()
             if (this.canHarvest(pos) && 
-                (CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
-                    CfgProps.DIG_BL_INV.get(this.digger).booleanValue())) {
+                    ESM_Settings.ZombieDigBlacklist.contains(state.getBlock().getRegistryName().toString()) == ESM_Settings.ZombieSwapList) {
                 return pos;
             }
         }
@@ -280,7 +279,7 @@ public class AltEntityAIDigging extends EntityAIBase {
         if (!state.getMaterial().isSolid() || state.getBlockHardness(this.digger.world, pos) < 0.0f) {
             return false;
         }
-        if (state.getMaterial().isToolNotRequired() || !((Boolean)CfgProps.DIG_TOOLS.get((Entity)this.digger)).booleanValue()) {
+        if (state.getMaterial().isToolNotRequired() || !ESM_Settings.ZombieDiggerTools) {
             return true;
         }
         ItemStack held = this.digger.getHeldItem(EnumHand.MAIN_HAND);
@@ -333,8 +332,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         // The block is blacklisted or not whitelisted for digging 
         // (only works if the list is defined under the entity tag in the config)
-        if(CfgProps.DIG_BL.get(this.digger).contains(state.getBlock().getRegistryName().toString()) == 
-            !CfgProps.DIG_BL_INV.get(this.digger)) {
+        if(ESM_Settings.ZombieDigBlacklist.contains(state.getBlock().getRegistryName().toString()) == !ESM_Settings.ZombieSwapList) {
 
             this.canHarvest = false;
             return this.canHarvest;
@@ -348,7 +346,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 
         // If "Requires Tools" == true in esm ai config, 
         // then the mob ignore tool and level harvest restrictions
-        if(!CfgProps.DIG_TOOLS.get(this.digger)) {
+        if(!ESM_Settings.ZombieDiggerTools) {
 
             this.canHarvest = true;
             return this.canHarvest;

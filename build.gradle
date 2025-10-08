@@ -67,7 +67,8 @@ repositories {
 
 dependencies {
     deobfCompile "curse.maven:tool-progression-266550:3270468"
-    deobfCompile "curse.maven:epic-siege-mod-229449:3356157"
+    // deobfCompile "curse.maven:epic-siege-mod-229449:3356157" // 13.169
+    deobfCompile "curse.maven:epic-siege-mod-229449:2920048" // 13.168
 }
 
 processResources {
