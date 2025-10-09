@@ -19,8 +19,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-// import funwayguy.epicsiegemod.config.props.CfgProps;
 import funwayguy.epicsiegemod.core.ESM_Settings;
+
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.util.HarvestUtil;
