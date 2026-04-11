@@ -172,8 +172,14 @@ public class AltEntityAIDigging extends EntityAIBase {
 			this.resetTask();
             return; // just for safety
 		}
-        else if(str >= 1F) { // Block has been broken.
+        else if(str >= 1F || str == 0F) { // Block has been broken.
 
+            // for instaminable blocks only
+            if(str == 0F) {
+                this.digger.swingArm(this.diggingHand);
+                this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, 10);
+            }
+            
             // when param2 == true, the block is dropped as an item (harvest)
 			this.digger.world.destroyBlock(this.curBlock, false);
 
