@@ -47,6 +47,8 @@ public class AltEntityAIDigging extends EntityAIBase {
     public static int searchBlockInterval = 1;
     // ticks between harvest checks during mining
     public static int harvestCheckInterval = 20;
+    // block sound volume while its being mined
+    public static boolean diggingSounds = true;
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
@@ -204,7 +206,13 @@ public class AltEntityAIDigging extends EntityAIBase {
 		} 
         else if(digTick % 5 == 0) { // Just keeping digging...
 
-			this.digger.world.playSound(null, this.curBlock, state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
+            if(AltEntityAIDigging.diggingSounds) {
+                this.digger.world.playSound(
+                    null, this.curBlock, 
+                    state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), 
+                    SoundCategory.BLOCKS, 1F , 1F
+                );
+            }
 			this.digger.swingArm(this.diggingHand);
 			this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, (int)(str * 10F));
 		}

@@ -187,6 +187,17 @@ public class ModConfig {
                     "he is going to continue mining it (at reduced speed) for the set time."
                 );
             }
+
+            public static ConfigProperty<Boolean> diggingSounds = new ConfigProperty<Boolean>(
+                "diggingSounds", CATEGORY_NAME, true
+            );
+            static {
+                diggingSounds.setRequiredOptions(useTweakedAI);
+                diggingSounds.setComment(
+                    "Enables or disables digging sounds made by mobs (while they are mining a block). " +
+                    "This does not affect sounds made when the block breaks."
+                );
+            }
         }
     }
 
@@ -309,6 +320,7 @@ public class ModConfig {
         propertiesNames.add(AI.Digging.extraToolOverride.getName());
         propertiesNames.add(AI.Digging.extraToolChance.getName());
         propertiesNames.add(AI.Digging.legacyHarvestCheck.getName());
+        propertiesNames.add(AI.Digging.diggingSounds.getName());
 
         configuration.setCategoryPropertyOrder(AI.Digging.CATEGORY_NAME, propertiesNames);
         
@@ -339,6 +351,7 @@ public class ModConfig {
         // update digging ai values
         AltEntityAIDigging.harvestCheckInterval = ModConfig.AI.Digging.harvestCheckInterval.getValue();
         AltEntityAIDigging.searchBlockInterval = ModConfig.AI.Digging.searchBlockInterval.getValue();
+        AltEntityAIDigging.diggingSounds = ModConfig.AI.Digging.diggingSounds.getValue();
     }
 
     /**
