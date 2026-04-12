@@ -18,6 +18,7 @@ lirkas.esmtweaks.config.overrideTool=Pickaxe Replaces Held Item
 lirkas.esmtweaks.config.searchBlockInterval=Search Block Delay
 lirkas.esmtweaks.config.harvestCheckInterval=Update Break Check Delay
 lirkas.esmtweaks.config.diggingSounds=Digging Sounds
+lirkas.esmtweaks.config.digSpeedMultiplier=Digging Speed Multiplier
 
 lirkas.esmtweaks.config.enableDebug=Enable Debug
 lirkas.esmtweaks.config.displayBlockInfoInChat=Show Block Info In Chat

@@ -49,6 +49,8 @@ public class AltEntityAIDigging extends EntityAIBase {
     public static int harvestCheckInterval = 20;
     // block sound volume while its being mined
     public static boolean diggingSounds = true;
+    // digging speed multiplier for all mobs
+    public static double digSpeedMultiplier = 1.00;
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
@@ -157,7 +159,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 		
 		this.digTick++;
 
-        float str = HarvestUtil.getBlockStrength(this.digger, this.diggingHand, this.curBlock) * ((float)this.digTick + 1.0f);
+        float str = (float)AltEntityAIDigging.digSpeedMultiplier * HarvestUtil.getBlockStrength(this.digger, this.diggingHand, this.curBlock) * ((float)this.digTick + 1.0f);
 		ItemStack heldItem = this.digger.getHeldItem(this.diggingHand);
 		IBlockState state = this.digger.world.getBlockState(this.curBlock);
 		
