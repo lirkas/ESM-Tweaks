@@ -50,6 +50,10 @@ Can be changed in the config by disabling this mod's digging AI. Digging mobs wi
 The world/server must not be running for this setting to be changed in-game 
 and for changes to take effect.
 
+- **Digging speed for mobs can be changed**<br>
+All Mobs can be made to dig blocks faster or slower, from instant-mining, up to few hundred times slower.<br> 
+The setting affects all mobs with the digging AI and every block they mine. It cannot be individually set for specific mobs/blocks.
+
 - **Block breaking texture goes away when the block isnt mined.**<br>
 The texture is properly updated if the mob stops breaking a block for any reason. 
 It used to sometimes be stuck at the last mining progress until the block was updated by other means. 
