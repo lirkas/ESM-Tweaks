@@ -178,9 +178,9 @@ public class AltEntityAIDigging extends EntityAIBase {
 		}
         else if(str >= 1F || str == 0F) { // Block has been broken.
 
+            this.digger.swingArm(this.diggingHand);
             // for instaminable blocks only
             if(str == 0F) {
-                this.digger.swingArm(this.diggingHand);
                 this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, 10);
             }
             
