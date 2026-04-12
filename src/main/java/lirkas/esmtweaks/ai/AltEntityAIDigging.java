@@ -47,6 +47,10 @@ public class AltEntityAIDigging extends EntityAIBase {
     public static int searchBlockInterval = 1;
     // ticks between harvest checks during mining
     public static int harvestCheckInterval = 20;
+    // block sound volume while its being mined
+    public static boolean diggingSounds = true;
+    // digging speed multiplier for all mobs
+    public static double digSpeedMultiplier = 1.00;
 
 
 	public AltEntityAIDigging(EntityLiving digger) {
@@ -155,7 +159,7 @@ public class AltEntityAIDigging extends EntityAIBase {
 		
 		this.digTick++;
 
-        float str = HarvestUtil.getBlockStrength(this.digger, this.diggingHand, this.curBlock) * ((float)this.digTick + 1.0f);
+        float str = (float)AltEntityAIDigging.digSpeedMultiplier * HarvestUtil.getBlockStrength(this.digger, this.diggingHand, this.curBlock) * ((float)this.digTick + 1.0f);
 		ItemStack heldItem = this.digger.getHeldItem(this.diggingHand);
 		IBlockState state = this.digger.world.getBlockState(this.curBlock);
 		
@@ -172,8 +176,14 @@ public class AltEntityAIDigging extends EntityAIBase {
 			this.resetTask();
             return; // just for safety
 		}
-        else if(str >= 1F) { // Block has been broken.
+        else if(str >= 1F || str == 0F) { // Block has been broken.
 
+            this.digger.swingArm(this.diggingHand);
+            // for instaminable blocks only
+            if(str == 0F) {
+                this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, 10);
+            }
+            
             // when param2 == true, the block is dropped as an item (harvest)
 			this.digger.world.destroyBlock(this.curBlock, false);
 
@@ -186,8 +196,10 @@ public class AltEntityAIDigging extends EntityAIBase {
                 // should ideally get rid of FakePlayer stuffs, but need to figure out what all this does
                 // and if another way of achieving this is possible (Forge docs says FakePlayer may cause world leaking issue)
                 FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)((WorldServer)this.digger.world));
-                player.setHeldItem(EnumHand.MAIN_HAND, this.digger.getHeldItem(EnumHand.MAIN_HAND));
-                player.setHeldItem(EnumHand.OFF_HAND, this.digger.getHeldItem(EnumHand.OFF_HAND));
+
+                player.inventory.mainInventory.set(player.inventory.currentItem, this.digger.getHeldItem(EnumHand.MAIN_HAND));
+                player.inventory.offHandInventory.set(0, this.digger.getHeldItem(EnumHand.OFF_HAND));
+                
                 player.setPosition((double)this.digger.getPosition().getX(), (double)this.digger.getPosition().getY(), (double)this.digger.getPosition().getZ());
                 TileEntity tile = this.digger.world.getTileEntity(this.curBlock);
                 state.getBlock().harvestBlock(this.digger.world, (EntityPlayer)player, this.curBlock, state, tile, heldItem);
@@ -198,7 +210,13 @@ public class AltEntityAIDigging extends EntityAIBase {
 		} 
         else if(digTick % 5 == 0) { // Just keeping digging...
 
-			this.digger.world.playSound(null, this.curBlock, state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), SoundCategory.BLOCKS, 1F, 1F);
+            if(AltEntityAIDigging.diggingSounds) {
+                this.digger.world.playSound(
+                    null, this.curBlock, 
+                    state.getBlock().getSoundType(state, this.digger.world, this.curBlock, this.digger).getHitSound(), 
+                    SoundCategory.BLOCKS, 1F , 1F
+                );
+            }
 			this.digger.swingArm(this.diggingHand);
 			this.digger.world.sendBlockBreakProgress(this.digger.getEntityId(), this.curBlock, (int)(str * 10F));
 		}

@@ -232,5 +232,6 @@ run/
 
 
 libs/*
+libs-disabled
 .docs
 instance/

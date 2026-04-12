@@ -187,6 +187,35 @@ public class ModConfig {
                     "he is going to continue mining it (at reduced speed) for the set time."
                 );
             }
+
+            public static ConfigProperty<Boolean> diggingSounds = new ConfigProperty<Boolean>(
+                "diggingSounds", CATEGORY_NAME, true
+            );
+            static {
+                diggingSounds.setRequiredOptions(useTweakedAI);
+                diggingSounds.setComment(
+                    "Enables or disables digging sounds made by mobs (while they are mining a block). " +
+                    "This does not affect sounds made when the block breaks."
+                );
+            }
+
+            public static ConfigProperty<Double> digSpeedMultiplier = new ConfigProperty<Double>(
+                "digSpeedMultiplier", CATEGORY_NAME, 1.00
+            );
+            static {
+                digSpeedMultiplier.getProperty()
+                    .setMinValue(0.0)
+                    .setMaxValue(256.0);
+                digSpeedMultiplier.setRequiredOptions(useTweakedAI);
+                digSpeedMultiplier.setComment(
+                    "Digging speed multipler for mobs. " +
+                    "It directly multiplies the speed at which mobs break a block by this value. " +
+                    "A block that would normally take 12.5 seconds to break by a specific mob will " +
+                    "take 25 seconds instead if this value is set to 0.5. " +
+                    "Blocks with 0 hardness are unaffected by this setting.\n" +
+                    "0 = instant mining, 1.0 = normal speed, 2.0 = 2x faster"
+                );
+            }
         }
     }
 
@@ -309,6 +338,8 @@ public class ModConfig {
         propertiesNames.add(AI.Digging.extraToolOverride.getName());
         propertiesNames.add(AI.Digging.extraToolChance.getName());
         propertiesNames.add(AI.Digging.legacyHarvestCheck.getName());
+        propertiesNames.add(AI.Digging.diggingSounds.getName());
+        propertiesNames.add(AI.Digging.digSpeedMultiplier.getName());
 
         configuration.setCategoryPropertyOrder(AI.Digging.CATEGORY_NAME, propertiesNames);
         
@@ -339,6 +370,8 @@ public class ModConfig {
         // update digging ai values
         AltEntityAIDigging.harvestCheckInterval = ModConfig.AI.Digging.harvestCheckInterval.getValue();
         AltEntityAIDigging.searchBlockInterval = ModConfig.AI.Digging.searchBlockInterval.getValue();
+        AltEntityAIDigging.diggingSounds = ModConfig.AI.Digging.diggingSounds.getValue();
+        AltEntityAIDigging.digSpeedMultiplier = ModConfig.AI.Digging.digSpeedMultiplier.getValue();
     }
 
     /**
