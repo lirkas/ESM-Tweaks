@@ -194,8 +194,10 @@ public class AltEntityAIDigging extends EntityAIBase {
                 // should ideally get rid of FakePlayer stuffs, but need to figure out what all this does
                 // and if another way of achieving this is possible (Forge docs says FakePlayer may cause world leaking issue)
                 FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)((WorldServer)this.digger.world));
-                player.setHeldItem(EnumHand.MAIN_HAND, this.digger.getHeldItem(EnumHand.MAIN_HAND));
-                player.setHeldItem(EnumHand.OFF_HAND, this.digger.getHeldItem(EnumHand.OFF_HAND));
+
+                player.inventory.mainInventory.set(player.inventory.currentItem, this.digger.getHeldItem(EnumHand.MAIN_HAND));
+                player.inventory.offHandInventory.set(0, this.digger.getHeldItem(EnumHand.OFF_HAND));
+                
                 player.setPosition((double)this.digger.getPosition().getX(), (double)this.digger.getPosition().getY(), (double)this.digger.getPosition().getZ());
                 TileEntity tile = this.digger.world.getTileEntity(this.curBlock);
                 state.getBlock().harvestBlock(this.digger.world, (EntityPlayer)player, this.curBlock, state, tile, heldItem);
