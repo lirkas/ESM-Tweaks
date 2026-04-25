@@ -1,0 +1,101 @@
+package lirkas.esmtweaks.ai;
+
+import java.lang.reflect.Field;
+
+import net.minecraft.entity.EntityLiving;
+
+import funwayguy.epicsiegemod.ai.ESM_EntityAIAttackMelee;
+
+import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.config.ModConfig;
+
+
+public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
+
+    public static final int defaultAttackDelay = 20;
+    public static boolean useCustomAttackDelay = true;
+    public static int minAttackDelay = 10;
+    public static int maxAttackDelay = 20;
+    
+    protected EntityLiving entity;
+    protected static Field attackTickField = null;
+    protected int previousAttackTick = 0;
+
+    static {
+        try {
+            AltEntityAIAttackMelee.attackTickField = ESM_EntityAIAttackMelee.class.getDeclaredField("attackTick");
+            AltEntityAIAttackMelee.attackTickField.setAccessible(true);
+        } catch (NoSuchFieldException | SecurityException exception) {
+            ESMTweaks.logger.error("Error while attempting to access 'attackTick' field");
+            exception.printStackTrace();
+        }
+    }
+
+    // moveSpeed only affects the speed at which the mob runs toward its target
+    public AltEntityAIAttackMelee(EntityLiving entity, double moveSpeed, boolean useLongMemory) {
+        super(entity, moveSpeed, useLongMemory);
+        this.entity = entity;
+    }
+
+    @Override
+    public void updateTask() {
+        this.previousAttackTick = this.getAttackTick();
+        super.updateTask();
+  
+        // If the current tick has just been reset from the parent method
+        if(this.previousAttackTick <= 1 && this.getAttackTick() > 1) {
+            // If the config allows to set custom delays and force all mobs to have long memory
+            if(ModConfig.AI.Attack.Melee.useCustomAttackDelay.getValue() == true
+                    && ModConfig.AI.Attack.Melee.forceLongMemory.getValue() == true) {
+                this.resetAttackTick(AltEntityAIAttackMelee.minAttackDelay, AltEntityAIAttackMelee.maxAttackDelay);
+            }
+            else{
+                this.setAttackTick(AltEntityAIAttackMelee.defaultAttackDelay);
+            }
+        }
+    }
+
+    /**
+     * Sets a random time in ticks for the next attack to happen.
+     * 
+     * @param minDelay Minimum Amount of ticks before next attack (inclusive).
+     * @param maxDelay Maximum Amount of ticks before next attack (inclusive).
+     */
+    protected void resetAttackTick(int minDelay, int maxDelay) {
+        if(maxDelay > minDelay) {
+            this.setAttackTick(minDelay + this.entity.getRNG().nextInt(maxDelay - minDelay));
+        } 
+        else {
+            this.setAttackTick(minDelay);
+        }
+    }
+
+    /**
+     * Sets the time in ticks for the next attack to happen.
+     * 
+     * @param attackDelay Amount of ticks before next attack.
+     */
+    protected void setAttackTick(int attackDelay) {
+        try {
+            AltEntityAIAttackMelee.attackTickField.setInt(this, attackDelay);
+        } catch (IllegalArgumentException | IllegalAccessException exception) {
+            ESMTweaks.logger.error("Could not set attack tick value to field");
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Retreives the value indicating how many ticks are left until the next attack can
+     * be performed.
+     */
+    protected int getAttackTick() {
+        int currentAttackTick = AltEntityAIAttackMelee.defaultAttackDelay;
+        try {
+            currentAttackTick = AltEntityAIAttackMelee.attackTickField.getInt(this);
+        } catch (IllegalArgumentException | IllegalAccessException exception) {
+            ESMTweaks.logger.error("Could not get attack tick value from field");
+            exception.printStackTrace();
+        }
+        return currentAttackTick;
+    }
+}

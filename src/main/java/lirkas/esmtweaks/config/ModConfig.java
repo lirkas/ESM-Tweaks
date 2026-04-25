@@ -14,6 +14,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
 import lirkas.esmtweaks.ESMTweaks;
+import lirkas.esmtweaks.ai.AltEntityAIAttackMelee;
 import lirkas.esmtweaks.ai.AltEntityAIDigging;
 import lirkas.esmtweaks.util.Util;
 
@@ -217,6 +218,89 @@ public class ModConfig {
                 );
             }
         }
+
+        // Attack AI SubCategory Options
+        public static class Attack {
+
+            public static final String CATEGORY_NAME = AI.CATEGORY_NAME + ".Attack";
+            public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, AI.configCategory);
+
+            // Melee Attack AI SubCategory Options
+            public static class Melee {
+    
+                public static final String CATEGORY_NAME = Attack.CATEGORY_NAME + ".Melee";
+                public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, AI.Attack.configCategory);
+
+                public static ConfigProperty<Boolean> useTweakedAI = new ConfigProperty<Boolean>(
+                    "useTweakedAI", CATEGORY_NAME, true
+                );
+                static {
+                    useTweakedAI.getProperty()
+                        .setRequiresWorldRestart(true);
+                    useTweakedAI.setComment(
+                        "Replaces ESM AttackMelee AI by this mod's one (which is based on). " +
+                        "Only affects mobs that had this AI changed by ESM. " +
+                        "This is required for other AI options to take effect.\n" +
+                        "Can only be changed when the server/world is not running."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> forceLongMemory = new ConfigProperty<Boolean>(
+                    "forceLongMemory", CATEGORY_NAME, true
+                );
+                static {
+                    forceLongMemory.setRequiredOptions(useTweakedAI);
+                    forceLongMemory.setComment(
+                        "If enabled, the type of memory will be forced to 'long' for all mobs with this AI. " +
+                        "If disabled, keeps the same memory type defined in the AI it replaced. " +
+                        "This affects attack rate, AI updates frequency, and potentially other things.\n" +
+                        "Only affects newly spawned/created entities."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useCustomAttackDelay = new ConfigProperty<Boolean>(
+                    "useCustomAttackDelay", CATEGORY_NAME, true
+                );
+                static {
+                    useCustomAttackDelay.setRequiredOptions(useTweakedAI, forceLongMemory);
+                    useCustomAttackDelay.setComment(
+                        "If enabled, allows for custom attack delays to be defined. " +
+                        "A random delay in ticks between min and max is set after each attack. " +
+                        "If disabled, it uses Minecraft's default delay of 20 ticks per attack. " +
+                        "Delays dont always exactly match with game ticks.\n" +
+                        "Min and max delays are set from the next 2 options. "
+                    );
+                }
+
+                public static ConfigProperty<Integer> minAttackDelay = new ConfigProperty<Integer>(
+                    "minAttackDelay", CATEGORY_NAME, 10
+                );
+                static {
+                    minAttackDelay.getProperty()
+                        .setMinValue(5)
+                        .setMaxValue(100);
+                    minAttackDelay.setRequiredOptions(useTweakedAI, useCustomAttackDelay);
+                    minAttackDelay.setComment(
+                        "Defines the minimum amount of ticks a mob waits between each attack.\n" +
+                        "20 ticks = 1 second"
+                    );
+                }
+
+                public static ConfigProperty<Integer> maxAttackDelay = new ConfigProperty<Integer>(
+                    "maxAttackDelay", CATEGORY_NAME, 20
+                );
+                static {
+                    maxAttackDelay.getProperty()
+                        .setMinValue(5)
+                        .setMaxValue(100);
+                    maxAttackDelay.setRequiredOptions(useTweakedAI, useCustomAttackDelay);
+                    maxAttackDelay.setComment(
+                        "Defines the maximum amount of ticks a mob waits between each attack.\n" +
+                        "20 ticks = 1 second"
+                    );
+                }
+            }
+        }
     }
 
     // Debug Category Options
@@ -304,6 +388,10 @@ public class ModConfig {
         configuration.setCategoryLanguageKey(
             AI.Digging.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + AI.Digging.configCategory.getName());
         configuration.setCategoryLanguageKey(
+            AI.Attack.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + AI.Attack.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            AI.Attack.Melee.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + AI.Attack.Melee.configCategory.getName());
+        configuration.setCategoryLanguageKey(
             Debug.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Debug.configCategory.getName());
     }
 
@@ -316,6 +404,8 @@ public class ModConfig {
         ConfigProperty.setupPropertiesFromClass(AI.class, configuration);
         ConfigProperty.setupPropertiesFromClass(AI.General.class, configuration);
         ConfigProperty.setupPropertiesFromClass(AI.Digging.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(AI.Attack.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(AI.Attack.Melee.class, configuration);
         ConfigProperty.setupPropertiesFromClass(Debug.class, configuration);
 
         // setting up the order in which settings are displayed in the Config GUI
@@ -353,6 +443,16 @@ public class ModConfig {
 
         configuration.setCategoryPropertyOrder(Debug.CATEGORY_NAME, propertiesNames);
 
+        // MeleeAttack AI options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(AI.Attack.Melee.useTweakedAI.getName());
+        propertiesNames.add(AI.Attack.Melee.forceLongMemory.getName());
+        propertiesNames.add(AI.Attack.Melee.useCustomAttackDelay.getName());
+        propertiesNames.add(AI.Attack.Melee.minAttackDelay.getName());
+        propertiesNames.add(AI.Attack.Melee.maxAttackDelay.getName());
+
+        configuration.setCategoryPropertyOrder(AI.Attack.Melee.CATEGORY_NAME, propertiesNames);
+
         // saving previous changes
         configuration.save();
     }
@@ -372,6 +472,11 @@ public class ModConfig {
         AltEntityAIDigging.searchBlockInterval = ModConfig.AI.Digging.searchBlockInterval.getValue();
         AltEntityAIDigging.diggingSounds = ModConfig.AI.Digging.diggingSounds.getValue();
         AltEntityAIDigging.digSpeedMultiplier = ModConfig.AI.Digging.digSpeedMultiplier.getValue();
+        
+        // update melee attack ai values
+        AltEntityAIAttackMelee.useCustomAttackDelay = ModConfig.AI.Attack.Melee.useCustomAttackDelay.getValue();
+        AltEntityAIAttackMelee.minAttackDelay = ModConfig.AI.Attack.Melee.minAttackDelay.getValue();
+        AltEntityAIAttackMelee.maxAttackDelay = ModConfig.AI.Attack.Melee.maxAttackDelay.getValue();
     }
 
     /**

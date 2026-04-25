@@ -10,9 +10,13 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
 
 import funwayguy.epicsiegemod.ai.additions.AdditionDigger;
+import funwayguy.epicsiegemod.ai.modifiers.ModifierAttackMelee;
+import funwayguy.epicsiegemod.ai.modifiers.ModifierZombieAttack;
 
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
+import lirkas.esmtweaks.ai.modifier.MeleeAttackAITaskModifier;
+import lirkas.esmtweaks.ai.modifier.ZombieAttackAITaskModifier;
 import lirkas.esmtweaks.ai.registrar.AITaskRegistrar;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.event.registrar.CommonEventHandlerRegistrar;
@@ -60,6 +64,19 @@ public abstract class CommonProxy implements IProxy {
         }
         else {
             AITaskRegistrar.registerTask(new AdditionDigger());
+        }
+
+        if(ModConfig.AI.Attack.Melee.useTweakedAI.getValue()) {
+            AITaskRegistrar.unregisterTasks(ModifierZombieAttack.class);
+            AITaskRegistrar.unregisterTasks(ModifierAttackMelee.class);
+            AITaskRegistrar.registerTask(new MeleeAttackAITaskModifier());
+            AITaskRegistrar.registerTask(new ZombieAttackAITaskModifier());
+        }
+        else {
+            AITaskRegistrar.unregisterTasks(ZombieAttackAITaskModifier.class);
+            AITaskRegistrar.unregisterTasks(MeleeAttackAITaskModifier.class);
+            AITaskRegistrar.registerTask(new ModifierZombieAttack());
+            AITaskRegistrar.registerTask(new ModifierAttackMelee());
         }
     }
 }
