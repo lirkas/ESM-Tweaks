@@ -2,7 +2,11 @@ package lirkas.esmtweaks.ai;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 
 import funwayguy.epicsiegemod.ai.ESM_EntityAIAttackMelee;
 
@@ -20,6 +24,7 @@ public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
     protected EntityLiving entity;
     protected static Field attackTickField = null;
     protected int previousAttackTick = 0;
+    protected boolean useLongMemory;
 
     static {
         try {
@@ -35,6 +40,34 @@ public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
     public AltEntityAIAttackMelee(EntityLiving entity, double moveSpeed, boolean useLongMemory) {
         super(entity, moveSpeed, useLongMemory);
         this.entity = entity;
+        this.useLongMemory = useLongMemory;
+    }
+
+    public boolean shouldContinueExecuting() {
+
+        if(!ModConfig.AI.General.disableXRay.getValue() && ModConfig.AI.Attack.Melee.forceLongMemory.getValue()) {
+            return super.shouldContinueExecuting();
+        }
+
+        EntityLivingBase target = this.entity.getAttackTarget();
+        if (target == null) {
+            return false;
+        }
+        else if (!target.isEntityAlive()) {
+            return false;
+        }
+        else if (!this.useLongMemory) {
+            return !this.entity.getNavigator().noPath();
+        }
+        else if (this.entity instanceof EntityCreature && 
+                !((EntityCreature)this.entity).isWithinHomeDistanceFromPosition(new BlockPos(target))) {
+            return false;
+        }
+        else {
+            return !(target instanceof EntityPlayer) || 
+                    !((EntityPlayer)target).isSpectator() && 
+                    !((EntityPlayer)target).isCreative();
+        }
     }
 
     @Override
