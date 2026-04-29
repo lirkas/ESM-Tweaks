@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "esmtweaks",
+    "name": "Epic Siege Mod Tweaks",
+    "description": "Implements changes to ESM AI to improve its compatibility with Rebirth of the Night.",
+    "version": "${modVersion}",
+    "mcversion": "${minecraftVersion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["lirkas"],
+    "credits": "funwayguy (Epic Siege Mod), tyra314 (Tool Progression)",
+    "logoFile": "",
+    "screenshots": [],
+    "useDependencyInformation": true,
+    "requiredMods": ["epicsiegemod"],
+    "dependencies": ["epicsiegemod", "toolprogression"],
+    "dependants": []
+  }
+]
