@@ -19,17 +19,22 @@ public class MeleeAttackAITaskModifier extends ModifierAttackMelee {
     
     static {
         try {
-            MeleeAttackAITaskModifier.longMemory = EntityAIAttackMelee.class.getDeclaredField("longMemory");
+            MeleeAttackAITaskModifier.longMemory = EntityAIAttackMelee.class.getDeclaredField("field_75437_f");
             MeleeAttackAITaskModifier.longMemory.setAccessible(true);
-        } catch (NoSuchFieldException | SecurityException exception) {
-            ESMTweaks.logger.error("Error while attempting to access 'longMemory' field");
-            exception.printStackTrace();
+        } catch (NoSuchFieldException | SecurityException exceptionDeobf) {
+            try {
+                MeleeAttackAITaskModifier.longMemory = EntityAIAttackMelee.class.getDeclaredField("longMemory");
+                MeleeAttackAITaskModifier.longMemory.setAccessible(true);
+            } catch (NoSuchFieldException | SecurityException exception) {
+                ESMTweaks.logger.error("Error while attempting to access 'longMemory' field", exception);
+            }
         }
     }
 
     public static boolean useLongMemory(EntityLiving host, EntityAIBase task) {
         if(ModConfig.AI.Attack.Melee.forceLongMemory.getValue() == false) {
             try {
+                ESMTweaks.logger.debug("useLongMemory : " + MeleeAttackAITaskModifier.longMemory.getBoolean(task));
                 return MeleeAttackAITaskModifier.longMemory.getBoolean(task);
             } catch (IllegalArgumentException | IllegalAccessException exception) {
                 ESMTweaks.logger.warn("Could not change longMemory for " + task.getClass().getSimpleName());
