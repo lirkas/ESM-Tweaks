@@ -252,9 +252,10 @@ public class ModConfig {
                     forceLongMemory.setRequiredOptions(useTweakedAI);
                     forceLongMemory.setComment(
                         "If enabled, the type of memory will be forced to 'long' for all mobs with this AI. " +
-                        "If disabled, keeps the same memory type defined in the AI it replaced. " +
+                        "If disabled, uses the mob's original memory type defined by minecraft " +
+                        "but might negatively impacts ESM 'Xray Distance' feature. " +
                         "This affects attack rate, AI updates frequency, and potentially other things.\n" +
-                        "Only affects newly spawned/created entities."
+                        "Fully takes effect on newly spawned/created entities."
                     );
                 }
 
