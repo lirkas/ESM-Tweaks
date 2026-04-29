@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -106,5 +108,31 @@ public class Util {
         Attributes attributes = manifest.getMainAttributes();
 
         return attributes.getValue(propertyName);
+    }
+
+    /**
+     * Removes one or more elements in 'list' that are or extends from 'classToCheck'.
+     * 
+     * @param list The list to remove element(s) from.
+     * @param classToCheck The class to compare elements with.
+     * @param allMatches If true, removes all matching elements, else stops after the first match.
+     */
+    public static void removeFromListByClass(List<?> list, Class<?> classToCheck, boolean allMatches) {
+
+        for(ListIterator<?> iterator = list.listIterator(); iterator.hasNext(); ) {
+            Object element = iterator.next();
+            // if the element matches the class - remove it
+            if(classToCheck.isInstance(element)) {
+                iterator.remove();
+                
+                // exit the for loop here if we only remove the first match
+                if(!allMatches) {
+                    break;
+                }
+            }
+        }
+    }
+    public static void removeFromListByClass(List<?> list, Class<?> classToCheck) {
+        removeFromListByClass(list, classToCheck, true);
     }
 }

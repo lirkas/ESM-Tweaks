@@ -1,65 +1,108 @@
 package lirkas.esmtweaks.ai.registrar;
 
 import java.util.List;
-import java.util.ListIterator;
 
 import funwayguy.epicsiegemod.api.TaskRegistry;
 import funwayguy.epicsiegemod.api.ITaskAddition;
+import funwayguy.epicsiegemod.api.ITaskModifier;
 
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
+import lirkas.esmtweaks.util.Util;
 
 
 public class AITaskRegistrar {
 
     /**
      * Registers an ITaskAddition, such as an specific class that applies AI on mob spawn.
-     * @param task The task to register.
+     * @param taskAddition The task to register.
      */
-    public static void registerTask(ITaskAddition task) {
-        ESMTweaks.logger.debug("Registering task : " + task.getClass().getSimpleName());
-        TaskRegistry.INSTANCE.registerTaskAddition(task);
+    public static void registerTask(ITaskAddition taskAddition) {
+        ESMTweaks.logger.debug("Registering taskAddition : " + taskAddition.getClass().getSimpleName());
+        TaskRegistry.INSTANCE.registerTaskAddition(taskAddition);
+    }
+
+    /**
+     * Registers an ITaskModifier, such as an specific class that applies AI on mob spawn.
+     * @param taskModifier The task to register.
+     */
+    public static void registerTask(ITaskModifier taskModifier) {
+        ESMTweaks.logger.debug("Registering taskModifier : " + taskModifier.getClass().getSimpleName());
+        TaskRegistry.INSTANCE.registerTaskModifier(taskModifier);
     }
 
     /**
      * Registers all tasks added by this mod.
      * @see registerTask
      */
+    @Deprecated
     public static void registerAll() {
         registerTask(new DiggingAITaskAddition());
     }
 
     /**
-     * Unregisters/Removes an ESM-like TaskAddition added previously.
+     * Unregisters/Removes existing TaskModifiers or TaskAdditions.
+     * 
      * @param taskClass The "ITaskAddition" implemented class that will be removed from the list.
      * @param allMatches Removes all tasks that match 'taskClass' if set to true, else only removes the first match.
      */
-    public static void unregisterTasks(Class<? extends ITaskAddition> taskClass, boolean allMatches) {
+    public static void unregisterTasks(Class<?> taskClass, boolean allMatches) {
+    
+        List<?> tasks;
 
-        List<ITaskAddition> additions = TaskRegistry.INSTANCE.getAllAdditions();
-
-        for(ListIterator<ITaskAddition> iterator = additions.listIterator(); iterator.hasNext(); ) {
-            ITaskAddition taskAddition = iterator.next();
-            // if the ai task addition matches the class - remove it
-            if(taskClass.isInstance(taskAddition)) {
-                iterator.remove();
-                ESMTweaks.logger.debug("Unregistered task : " + taskClass.getSimpleName());
-                // exit the for loop here if we only remove the first match
-                if(!allMatches) {
-                    break;
-                }
-            }
+        if(ITaskModifier.class.isAssignableFrom(taskClass)) {
+            tasks = TaskRegistry.INSTANCE.getAllModifiers();
+            ESMTweaks.logger.debug("Unregistering TaskModifier : " + taskClass.getSimpleName());
         }
+        else if(ITaskAddition.class.isAssignableFrom(taskClass)) {
+            tasks = TaskRegistry.INSTANCE.getAllAdditions();
+            ESMTweaks.logger.debug("Unregistering TaskAddition : " + taskClass.getSimpleName());
+        }
+        else {
+            ESMTweaks.logger.error("Cannot unregister " + taskClass.getSimpleName() + " : Invalid Task.");
+            return;
+        }
+        Util.removeFromListByClass(tasks, taskClass, allMatches);
+    }
+    public static void unregisterTasks(Class<?> taskClass) {
+        unregisterTasks(taskClass, true);
+    }
+    /**
+     * @see #unregisterTasks
+     */
+    public static void unregisterTask(Class<?> taskClass) {
+        unregisterTasks(taskClass, false);
     }
 
-    public static void unregisterTasks(Class<? extends ITaskAddition> taskClass) {
-        unregisterTasks(taskClass, true);
+    /**
+     * @see #unregisterTasks
+     */
+    public static void unregisterTaskAdditions(Class<? extends ITaskAddition> taskClass, boolean allMatches) {
+        unregisterTasks(taskClass, allMatches);
+    }
+    public static void unregisterTaskAdditions(Class<? extends ITaskAddition> taskClass) {
+        unregisterTaskAdditions(taskClass, true);
+    }
+    /**
+     * @see #unregisterTaskAdditions
+     */
+    public static void unregisterTaskAddition(Class<? extends ITaskAddition> taskClass) {
+        unregisterTaskAdditions(taskClass, false);
     }
     
     /**
-     * @see unregisterTasks
+     * @see #unregisterTasks
      */
-    public static void unregisterTask(Class<? extends ITaskAddition> taskClass) {
-        unregisterTasks(taskClass, false);
+    public static void unregisterTaskModifiers(Class<? extends ITaskModifier> taskClass, boolean allMatches) {
+        unregisterTasks(taskClass, allMatches);
+    }
+    public static void unregisterTaskModifiers(Class<? extends ITaskModifier> taskClass) {
+        unregisterTaskModifiers(taskClass, true);
+    }
+    /**
+     * @see #unregisterTaskModifiers
+     */
+    public static void unregisterTaskModifier(Class<? extends ITaskModifier> taskClass) {
+        unregisterTaskModifiers(taskClass, false);
     }
 }

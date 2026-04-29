@@ -4,8 +4,14 @@ lirkas.esmtweaks.config.category.AI.General=General AI Settings
 lirkas.esmtweaks.config.category.AI.General.tooltip=Various AI Settings
 lirkas.esmtweaks.config.category.AI.Digging=Digging AI Settings
 lirkas.esmtweaks.config.category.AI.Digging.tooltip=Options related to the Digging AI.
+lirkas.esmtweaks.config.category.AI.Attack=Attack AI Settings
+lirkas.esmtweaks.config.category.AI.Attack.tooltip=Options related to Attack AIs.
+lirkas.esmtweaks.config.category.AI.Attack.Melee=Melee Attack AI Settings
+lirkas.esmtweaks.config.category.AI.Attack.Melee.tooltip=Options related to the Melee Attack AI.
 lirkas.esmtweaks.config.category.Debug=Debug Settings
 lirkas.esmtweaks.config.category.Debug.tooltip=Options used for testing and debugging.
+
+lirkas.esmtweaks.config.disableXRay=Disable Xray Vision
 
 lirkas.esmtweaks.config.useTweakedAI=Use Tweaked AI
 lirkas.esmtweaks.config.mustHaveCorrectTool=Mob Tool Check
@@ -19,6 +25,11 @@ lirkas.esmtweaks.config.searchBlockInterval=Search Block Delay
 lirkas.esmtweaks.config.harvestCheckInterval=Update Break Check Delay
 lirkas.esmtweaks.config.diggingSounds=Digging Sounds
 lirkas.esmtweaks.config.digSpeedMultiplier=Digging Speed Multiplier
+
+lirkas.esmtweaks.config.useCustomAttackDelay=Set Custom Attack Delay
+lirkas.esmtweaks.config.forceLongMemory=Force Long Memory
+lirkas.esmtweaks.config.minAttackDelay=Min Attack Delay
+lirkas.esmtweaks.config.maxAttackDelay=Max Attack Delay
 
 lirkas.esmtweaks.config.enableDebug=Enable Debug
 lirkas.esmtweaks.config.displayBlockInfoInChat=Show Block Info In Chat
