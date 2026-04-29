@@ -11,6 +11,8 @@ lirkas.esmtweaks.config.category.AI.Attack.Melee.tooltip=Options related to the 
 lirkas.esmtweaks.config.category.Debug=Debug Settings
 lirkas.esmtweaks.config.category.Debug.tooltip=Options used for testing and debugging.
 
+lirkas.esmtweaks.config.disableXRay=Disable Xray Vision
+
 lirkas.esmtweaks.config.useTweakedAI=Use Tweaked AI
 lirkas.esmtweaks.config.mustHaveCorrectTool=Mob Tool Check
 lirkas.esmtweaks.config.legacyHarvestCheck=Use ESM Default Check

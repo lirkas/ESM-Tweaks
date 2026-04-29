@@ -60,6 +60,16 @@ public class ModConfig {
                     "Enabling this option may or may not lead to unexpected issues for other AI types."
                 );
             }
+
+            public static ConfigProperty<Boolean> disableXRay = new ConfigProperty<Boolean>(
+                "disableXRay", CATEGORY_NAME, false
+            );
+            static {
+                disableXRay.setComment(
+                    "Disables Xray Vision feature for mobs and ignores ESM 'Xray Distance' config values.\n" +
+                    "Takes effect for newly spawned/created entities or on server/world restart."
+                );
+            }
         }
 
         // Digging AI SubCategory Options
@@ -255,7 +265,7 @@ public class ModConfig {
                         "If disabled, uses the mob's original memory type defined by minecraft " +
                         "but might negatively impacts ESM 'Xray Distance' feature. " +
                         "This affects attack rate, AI updates frequency, and potentially other things.\n" +
-                        "Fully takes effect on newly spawned/created entities."
+                        "Fully takes effect on newly spawned/created entities or on server/world restart."
                     );
                 }
 
@@ -415,6 +425,7 @@ public class ModConfig {
         // General AI options ordering
         propertiesNames = new ArrayList<>();
         propertiesNames.add(AI.General.updateAITaskOnDeath.getName());
+        propertiesNames.add(AI.General.disableXRay.getName());
 
         configuration.setCategoryPropertyOrder(AI.General.CATEGORY_NAME, propertiesNames);
         

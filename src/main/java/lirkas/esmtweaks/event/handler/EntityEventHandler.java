@@ -1,6 +1,7 @@
 package lirkas.esmtweaks.event.handler;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.EntitySenses;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -9,6 +10,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.lang.reflect.Field;
 
 import funwayguy.epicsiegemod.api.ITaskAddition;
 import funwayguy.epicsiegemod.api.TaskRegistry;
@@ -25,6 +28,22 @@ import lirkas.esmtweaks.util.Util;
  */
 public class EntityEventHandler {
     
+    public static Field sensesField;
+
+    static {
+        try {
+            EntityEventHandler.sensesField = EntityLiving.class.getDeclaredField("field_70723_bA");
+            EntityEventHandler.sensesField.setAccessible(true);
+        } catch (NoSuchFieldException | SecurityException exceptionDeobf) {
+            try {
+                EntityEventHandler.sensesField = EntityLiving.class.getDeclaredField("senses");
+                EntityEventHandler.sensesField.setAccessible(true);
+            } catch (NoSuchFieldException | SecurityException exception) {
+                ESMTweaks.logger.error("Error while attempting to access 'senses' field", exception);
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
         
@@ -57,12 +76,21 @@ public class EntityEventHandler {
         }
 
         EntityLiving entityLiving = (EntityLiving) event.getEntity();
-
+        EntitySenses senses = entityLiving.getEntitySenses();
+        
         ESMTweaks.logger.trace("onEntityConstruct " + entityLiving.getName());
 
         // should not be called if ESM onEntityConstruct is still registered as a listener
         new MainHandler().onEntityConstruct(event);
 
+        if(ModConfig.AI.General.disableXRay.getValue()) {
+            try {
+                sensesField.set(entityLiving, senses);
+            } catch (Exception e) {
+                ESMTweaks.logger.trace("Could not set field 'senses'");
+            }
+        }
+        
         ESMTweaks.logger.trace("Tasks : ");
         for(String taskName : EntityUtil.getAITasks(entityLiving, true)) {
             ESMTweaks.logger.trace("    " + taskName);
