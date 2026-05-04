@@ -11,8 +11,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.lang.reflect.Field;
-
 import funwayguy.epicsiegemod.api.ITaskAddition;
 import funwayguy.epicsiegemod.api.TaskRegistry;
 import funwayguy.epicsiegemod.handlers.MainHandler;
@@ -21,6 +19,7 @@ import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.addition.DiggingAITaskAddition;
 import lirkas.esmtweaks.config.ModConfig;
 import lirkas.esmtweaks.util.EntityUtil;
+import lirkas.esmtweaks.util.ReflectUtil;
 import lirkas.esmtweaks.util.Util;
 
 /**
@@ -28,20 +27,10 @@ import lirkas.esmtweaks.util.Util;
  */
 public class EntityEventHandler {
     
-    public static Field sensesField;
+    public static ReflectUtil.WrappedField<EntityLiving, EntitySenses> sensesField;
 
     static {
-        try {
-            EntityEventHandler.sensesField = EntityLiving.class.getDeclaredField("field_70723_bA");
-            EntityEventHandler.sensesField.setAccessible(true);
-        } catch (NoSuchFieldException | SecurityException exceptionDeobf) {
-            try {
-                EntityEventHandler.sensesField = EntityLiving.class.getDeclaredField("senses");
-                EntityEventHandler.sensesField.setAccessible(true);
-            } catch (NoSuchFieldException | SecurityException exception) {
-                ESMTweaks.logger.error("Error while attempting to access 'senses' field", exception);
-            }
-        }
+        sensesField = new ReflectUtil.WrappedField<>(EntityLiving.class, "senses", "field_70723_bA");
     }
 
     @SubscribeEvent
@@ -84,11 +73,7 @@ public class EntityEventHandler {
         new MainHandler().onEntityConstruct(event);
 
         if(ModConfig.AI.General.disableXRay.getValue()) {
-            try {
-                sensesField.set(entityLiving, senses);
-            } catch (Exception e) {
-                ESMTweaks.logger.trace("Could not set field 'senses'");
-            }
+            sensesField.setValue(entityLiving, senses);
         }
         
         ESMTweaks.logger.trace("Tasks : ");

@@ -1,7 +1,5 @@
 package lirkas.esmtweaks.ai;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,8 +8,8 @@ import net.minecraft.util.math.BlockPos;
 
 import funwayguy.epicsiegemod.ai.ESM_EntityAIAttackMelee;
 
-import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.config.ModConfig;
+import lirkas.esmtweaks.util.ReflectUtil;
 
 
 public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
@@ -22,18 +20,12 @@ public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
     public static int maxAttackDelay = 20;
     
     protected EntityLiving entity;
-    protected static Field attackTickField = null;
+    public static ReflectUtil.WrappedField<ESM_EntityAIAttackMelee, Integer> attackTickField;
     protected int previousAttackTick = 0;
     protected boolean useLongMemory;
 
     static {
-        try {
-            AltEntityAIAttackMelee.attackTickField = ESM_EntityAIAttackMelee.class.getDeclaredField("attackTick");
-            AltEntityAIAttackMelee.attackTickField.setAccessible(true);
-        } catch (NoSuchFieldException | SecurityException exception) {
-            ESMTweaks.logger.error("Error while attempting to access 'attackTick' field");
-            exception.printStackTrace();
-        }
+        attackTickField = new ReflectUtil.WrappedField<>(ESM_EntityAIAttackMelee.class, "attackTick");
     }
 
     // moveSpeed only affects the speed at which the mob runs toward its target
@@ -109,12 +101,7 @@ public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
      * @param attackDelay Amount of ticks before next attack.
      */
     protected void setAttackTick(int attackDelay) {
-        try {
-            AltEntityAIAttackMelee.attackTickField.setInt(this, attackDelay);
-        } catch (IllegalArgumentException | IllegalAccessException exception) {
-            ESMTweaks.logger.error("Could not set attack tick value to field");
-            exception.printStackTrace();
-        }
+        attackTickField.setValue(this, attackDelay);
     }
 
     /**
@@ -122,13 +109,6 @@ public class AltEntityAIAttackMelee extends ESM_EntityAIAttackMelee {
      * be performed.
      */
     protected int getAttackTick() {
-        int currentAttackTick = AltEntityAIAttackMelee.defaultAttackDelay;
-        try {
-            currentAttackTick = AltEntityAIAttackMelee.attackTickField.getInt(this);
-        } catch (IllegalArgumentException | IllegalAccessException exception) {
-            ESMTweaks.logger.error("Could not get attack tick value from field");
-            exception.printStackTrace();
-        }
-        return currentAttackTick;
+        return attackTickField.getValue(this, AltEntityAIAttackMelee.defaultAttackDelay);
     }
 }
