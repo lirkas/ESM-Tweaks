@@ -80,5 +80,6 @@ public class CommonEventHandlerRegistrar implements IEventHandlerRegistrar {
         }
 
         ESMTweaks.logger.warn("unregisterEventHanlder : did not find anything to unregister");
+        ESMTweaks.logger.warn("\t" + classpath + ":" + methodName);
     }
 }

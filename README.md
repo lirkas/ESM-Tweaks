@@ -11,7 +11,7 @@ ToolProgression (1.12.2-1.6.12) is not required, but highly recommended, to make
 
 ## Mod Info
 
-**TL;DR : The purpose of this mod is to make digging mobs respect block mining tiers added by ToolProgression.**<br>
+**TL;DR : The main purpose of this mod is to make digging mobs respect block mining tiers added by ToolProgression.**<br>
 
 In Rebirth of the Night 3.3 (and possibly previous versions), mobs that can dig (using Epic Siege Mod AI) will be 
 able to mine any breakable/non-blacklisted block, as long as the tool category matches.<br>
@@ -28,7 +28,8 @@ and to improve compatibility between Epic Siege Mod and ToolProgression.
 
 ## Main Features
 
-The following AI-related changes are exclusively for the digging AI.
+The following AI-related changes are exclusively for the digging AI.<br>
+A more compact list including other features can be found [Here](/docs/FEATURES.md).
 
 - **Digging mobs respect block mining levels/tiers added by ToolProgression.**<br>
 They will not be able to mine a block with their held tool if it does not fulfill 
@@ -58,9 +59,6 @@ The setting affects all mobs with the digging AI and every block they mine. It c
 The texture is properly updated if the mob stops breaking a block for any reason. 
 It used to sometimes be stuck at the last mining progress until the block was updated by other means. 
 (visual only)
-
-<br>
-Few other minor changes and improvements have been made, such as displaying block and tool infos in-game for block breaking tests and debugging, or fixing the AI assignement process being sometimes done twice for each entity.
 
 
 ## Installation

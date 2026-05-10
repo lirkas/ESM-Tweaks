@@ -314,6 +314,327 @@ public class ModConfig {
         }
     }
 
+    // Advanced Category Options
+    public static class Advanced {
+
+        public static final String CATEGORY_NAME = "Advanced";
+        public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME);
+
+        // ESM Core Features SubCategory Options
+        public static class ESMCore {
+
+            public static final String CATEGORY_NAME = Advanced.CATEGORY_NAME + ".ESMCore";
+            public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, Advanced.configCategory);
+
+            // ESM Addition SubCategory Options
+            public static class Additions {
+
+                public static final String CATEGORY_NAME = ESMCore.CATEGORY_NAME + ".Additions";
+                public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, ESMCore.configCategory);
+
+                public static ConfigProperty<Boolean> useAnimalAttack = new ConfigProperty<Boolean>(
+                    "useAnimalAttack", CATEGORY_NAME, true
+                );
+                static {
+                    useAnimalAttack.getProperty().setRequiresWorldRestart(true);
+                    useAnimalAttack.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useAnimalRetaliate = new ConfigProperty<Boolean>(
+                    "useAnimalRetaliate", CATEGORY_NAME, true
+                );
+                static {
+                    useAnimalRetaliate.getProperty().setRequiresWorldRestart(true);
+                    useAnimalRetaliate.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useAvoidExplosives = new ConfigProperty<Boolean>(
+                    "useAvoidExplosives", CATEGORY_NAME, true
+                );
+                static {
+                    useAvoidExplosives.getProperty().setRequiresWorldRestart(true);
+                    useAvoidExplosives.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useDemolition = new ConfigProperty<Boolean>(
+                    "useDemolition", CATEGORY_NAME, true
+                );
+                static {
+                    useDemolition.getProperty().setRequiresWorldRestart(true);
+                    useDemolition.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useDigger = new ConfigProperty<Boolean>(
+                    "useDigger", CATEGORY_NAME, true
+                );
+                static {
+                    useDigger.getProperty().setRequiresWorldRestart(true);
+                    useDigger.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useGriefing = new ConfigProperty<Boolean>(
+                    "useGriefing", CATEGORY_NAME, true
+                );
+                static {
+                    useGriefing.getProperty().setRequiresWorldRestart(true);
+                    useGriefing.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> usePillaring = new ConfigProperty<Boolean>(
+                    "usePillaring", CATEGORY_NAME, true
+                );
+                static {
+                    usePillaring.getProperty().setRequiresWorldRestart(true);
+                    usePillaring.setComment(
+                        "No description."
+                    );
+                }
+            }
+            
+            // ESM Modifiers SubCategory Options
+            public static class Modifiers {
+
+                public static final String CATEGORY_NAME = ESMCore.CATEGORY_NAME + ".Modifiers";
+                public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, ESMCore.configCategory);
+
+                public static ConfigProperty<Boolean> useAttackMelee = new ConfigProperty<Boolean>(
+                    "useAttackMelee", CATEGORY_NAME, true
+                );
+                static {
+                    useAttackMelee.getProperty().setRequiresWorldRestart(true);
+                    useAttackMelee.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useRangedAttack = new ConfigProperty<Boolean>(
+                    "useRangedAttack", CATEGORY_NAME, true
+                );
+                static {
+                    useRangedAttack.getProperty().setRequiresWorldRestart(true);
+                    useRangedAttack.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useBowAttack = new ConfigProperty<Boolean>(
+                    "useBowAttack", CATEGORY_NAME, true
+                );
+                static {
+                    useBowAttack.getProperty().setRequiresWorldRestart(true);
+                    useBowAttack.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useNearestAttackable = new ConfigProperty<Boolean>(
+                    "useNearestAttackable", CATEGORY_NAME, true
+                );
+                static {
+                    useNearestAttackable.getProperty().setRequiresWorldRestart(true);
+                    useNearestAttackable.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useZombieAttack = new ConfigProperty<Boolean>(
+                    "useZombieAttack", CATEGORY_NAME, true
+                );
+                static {
+                    useZombieAttack.getProperty().setRequiresWorldRestart(true);
+                    useZombieAttack.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useCreeperSwell = new ConfigProperty<Boolean>(
+                    "useCreeperSwell", CATEGORY_NAME, true
+                );
+                static {
+                    useCreeperSwell.getProperty().setRequiresWorldRestart(true);
+                    useCreeperSwell.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useNoPanic = new ConfigProperty<Boolean>(
+                    "useNoPanic", CATEGORY_NAME, true
+                );
+                static {
+                    useNoPanic.getProperty().setRequiresWorldRestart(true);
+                    useNoPanic.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useSwimming = new ConfigProperty<Boolean>(
+                    "useSwimming", CATEGORY_NAME, true
+                );
+                static {
+                    useSwimming.getProperty().setRequiresWorldRestart(true);
+                    useSwimming.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useAvoidVillager = new ConfigProperty<Boolean>(
+                    "useAvoidVillager", CATEGORY_NAME, true
+                );
+                static {
+                    useAvoidVillager.getProperty().setRequiresWorldRestart(true);
+                    useAvoidVillager.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useWander = new ConfigProperty<Boolean>(
+                    "useWander", CATEGORY_NAME, true
+                );
+                static {
+                    useWander.getProperty().setRequiresWorldRestart(true);
+                    useWander.setComment(
+                        "No description."
+                    );
+                }
+            }
+            // ESM Handlers SubCategory Options
+            public static class Handlers {
+
+                public static final String CATEGORY_NAME = ESMCore.CATEGORY_NAME + ".Handlers";
+                public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, ESMCore.configCategory);
+
+                public static ConfigProperty<Boolean> useMainHandler = new ConfigProperty<Boolean>(
+                    "useMainHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useMainHandler.getProperty().setRequiresMcRestart(true);
+                    useMainHandler.setComment(
+                        "Affects various important ESM features.\n" +
+                        "Disabling this may disable a lot of features."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useEntityHandler = new ConfigProperty<Boolean>(
+                    "useEntityHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useEntityHandler.getProperty().setRequiresMcRestart(true);
+                    useEntityHandler.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> usePlayerHandler = new ConfigProperty<Boolean>(
+                    "usePlayerHandler", CATEGORY_NAME, true
+                );
+                static {
+                    usePlayerHandler.getProperty().setRequiresMcRestart(true);
+                    usePlayerHandler.setComment(
+                        "No description."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useCreeperHandler = new ConfigProperty<Boolean>(
+                    "useCreeperHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useCreeperHandler.getProperty().setRequiresMcRestart(true);
+                    useCreeperHandler.setComment(
+                        "Allows changes for Creepers such as the chance to spawn charged and causing fire on explosion."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useEndermanHandler = new ConfigProperty<Boolean>(
+                    "useEndermanHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useEndermanHandler.getProperty().setRequiresMcRestart(true);
+                    useEndermanHandler.setComment(
+                        "Allows changes for Endermen such as teleporting their target instead of themselves."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useSkeletonHandler = new ConfigProperty<Boolean>(
+                    "useSkeletonHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useSkeletonHandler.getProperty().setRequiresMcRestart(true);
+                    useSkeletonHandler.setComment(
+                        "Allows changes for Skeletons such as the chance to spawn as Wither Skeleton and configurable arrow tips."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useSpiderHandler = new ConfigProperty<Boolean>(
+                    "useSpiderHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useSpiderHandler.getProperty().setRequiresMcRestart(true);
+                    useSpiderHandler.setComment(
+                        "Allows changes for Spiders such as placing webs on hit."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useWitchHandler = new ConfigProperty<Boolean>(
+                    "useWitchHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useWitchHandler.getProperty().setRequiresMcRestart(true);
+                    useWitchHandler.setComment(
+                        "Allows changes for Witches such as configurable thrown potions."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useZombieHandler = new ConfigProperty<Boolean>(
+                    "useZombieHandler", CATEGORY_NAME, true
+                );
+                static {
+                    useZombieHandler.getProperty().setRequiresMcRestart(true);
+                    useZombieHandler.setComment(
+                        "Allows 'infected' players to get turned into zombies on death."
+                    );
+                }
+            }
+            // ESM Other SubCategory Options
+            public static class Other {
+
+                public static final String CATEGORY_NAME = ESMCore.CATEGORY_NAME + ".Other";
+                public static ConfigCategory configCategory = new ConfigCategory(CATEGORY_NAME, ESMCore.configCategory);
+
+                public static ConfigProperty<Boolean> useSenses = new ConfigProperty<Boolean>(
+                    "useSenses", CATEGORY_NAME, true
+                );
+                static {
+                    useSenses.getProperty().setRequiresWorldRestart(true);
+                    useSenses.setComment(
+                        "Overrides mobs 'Senses' and enables 'XRay Distance' feature."
+                    );
+                }
+
+                public static ConfigProperty<Boolean> useNavigator = new ConfigProperty<Boolean>(
+                    "useNavigator", CATEGORY_NAME, true
+                );
+                static {
+                    useNavigator.getProperty().setRequiresWorldRestart(true);
+                    useNavigator.setComment(
+                        "Overrides mobs 'Navigator', which affects mobs pathing in general."
+                    );
+                }
+            }
+        }
+    }
+
     // Debug Category Options
     public static class Debug {
 
@@ -403,6 +724,18 @@ public class ModConfig {
         configuration.setCategoryLanguageKey(
             AI.Attack.Melee.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + AI.Attack.Melee.configCategory.getName());
         configuration.setCategoryLanguageKey(
+            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            Advanced.ESMCore.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            Advanced.ESMCore.Additions.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Additions.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            Advanced.ESMCore.Modifiers.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Modifiers.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            Advanced.ESMCore.Handlers.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Handlers.configCategory.getName());
+        configuration.setCategoryLanguageKey(
+            Advanced.ESMCore.Other.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Other.configCategory.getName());
+        configuration.setCategoryLanguageKey(
             Debug.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Debug.configCategory.getName());
     }
 
@@ -417,6 +750,14 @@ public class ModConfig {
         ConfigProperty.setupPropertiesFromClass(AI.Digging.class, configuration);
         ConfigProperty.setupPropertiesFromClass(AI.Attack.class, configuration);
         ConfigProperty.setupPropertiesFromClass(AI.Attack.Melee.class, configuration);
+
+        ConfigProperty.setupPropertiesFromClass(Advanced.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(Advanced.ESMCore.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(Advanced.ESMCore.Additions.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(Advanced.ESMCore.Modifiers.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(Advanced.ESMCore.Handlers.class, configuration);
+        ConfigProperty.setupPropertiesFromClass(Advanced.ESMCore.Other.class, configuration);
+
         ConfigProperty.setupPropertiesFromClass(Debug.class, configuration);
 
         // setting up the order in which settings are displayed in the Config GUI
@@ -445,16 +786,6 @@ public class ModConfig {
 
         configuration.setCategoryPropertyOrder(AI.Digging.CATEGORY_NAME, propertiesNames);
         
-        // Debug options ordering
-        propertiesNames = new ArrayList<>();
-        propertiesNames.add(Debug.enableDebug.getName());
-        propertiesNames.add(Debug.showCanBreakBlockMessage.getName());
-        propertiesNames.add(Debug.outputBlockInfoInChat.getName());
-        propertiesNames.add(Debug.useOffhandItemForChecks.getName());
-        propertiesNames.add(Debug.loggingLevel.getName());
-
-        configuration.setCategoryPropertyOrder(Debug.CATEGORY_NAME, propertiesNames);
-
         // MeleeAttack AI options ordering
         propertiesNames = new ArrayList<>();
         propertiesNames.add(AI.Attack.Melee.useTweakedAI.getName());
@@ -464,6 +795,64 @@ public class ModConfig {
         propertiesNames.add(AI.Attack.Melee.maxAttackDelay.getName());
 
         configuration.setCategoryPropertyOrder(AI.Attack.Melee.CATEGORY_NAME, propertiesNames);
+
+        // Advanced ESMCore Additions options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(Advanced.ESMCore.Additions.useAnimalAttack.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.useAnimalRetaliate.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.useAvoidExplosives.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.useDemolition.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.useDigger.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.useGriefing.getName());
+        propertiesNames.add(Advanced.ESMCore.Additions.usePillaring.getName());
+
+        configuration.setCategoryPropertyOrder(Advanced.ESMCore.Additions.CATEGORY_NAME, propertiesNames);
+
+        // Advanced ESMCore Modifiers options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useAttackMelee.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useRangedAttack.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useBowAttack.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useZombieAttack.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useCreeperSwell.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useNearestAttackable.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useNoPanic.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useSwimming.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useAvoidVillager.getName());
+        propertiesNames.add(Advanced.ESMCore.Modifiers.useWander.getName());
+        
+        configuration.setCategoryPropertyOrder(Advanced.ESMCore.Modifiers.CATEGORY_NAME, propertiesNames);
+
+        // Advanced ESMCore Handlers options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(Advanced.ESMCore.Handlers.useMainHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useEntityHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.usePlayerHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useCreeperHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useEndermanHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useSpiderHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useSkeletonHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useWitchHandler.getName());
+        propertiesNames.add(Advanced.ESMCore.Handlers.useZombieHandler.getName());
+        
+        configuration.setCategoryPropertyOrder(Advanced.ESMCore.Handlers.CATEGORY_NAME, propertiesNames);
+
+        // Advanced ESMCore Other options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(Advanced.ESMCore.Other.useSenses.getName());
+        propertiesNames.add(Advanced.ESMCore.Other.useNavigator.getName());
+        
+        configuration.setCategoryPropertyOrder(Advanced.ESMCore.Other.CATEGORY_NAME, propertiesNames);
+
+        // Debug options ordering
+        propertiesNames = new ArrayList<>();
+        propertiesNames.add(Debug.enableDebug.getName());
+        propertiesNames.add(Debug.showCanBreakBlockMessage.getName());
+        propertiesNames.add(Debug.outputBlockInfoInChat.getName());
+        propertiesNames.add(Debug.useOffhandItemForChecks.getName());
+        propertiesNames.add(Debug.loggingLevel.getName());
+
+        configuration.setCategoryPropertyOrder(Debug.CATEGORY_NAME, propertiesNames);
 
         // saving previous changes
         configuration.save();
@@ -504,6 +893,7 @@ public class ModConfig {
         // AI settings and any other ones that cant be changed from the client are hidden on online worlds
         if(!Util.isWorldMultiplayerServer(parentScreen.mc)) {
             elements.add(new ConfigElement(configuration.getCategory(AI.CATEGORY_NAME)));
+            elements.add(new ConfigElement(configuration.getCategory(Advanced.CATEGORY_NAME)));
         }
         elements.add(new ConfigElement(configuration.getCategory(Debug.CATEGORY_NAME)));
 

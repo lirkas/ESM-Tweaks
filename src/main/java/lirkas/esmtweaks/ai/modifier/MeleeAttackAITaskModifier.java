@@ -4,54 +4,39 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIBase;
 
-import java.lang.reflect.Field;
-
 import funwayguy.epicsiegemod.ai.modifiers.ModifierAttackMelee;
 
 import lirkas.esmtweaks.ESMTweaks;
 import lirkas.esmtweaks.ai.AltEntityAIAttackMelee;
 import lirkas.esmtweaks.config.ModConfig;
+import lirkas.esmtweaks.util.ReflectUtil;
 
 
 public class MeleeAttackAITaskModifier extends ModifierAttackMelee {
     
-    public static Field longMemory;
-    
+    public static ReflectUtil.WrappedField<EntityAIAttackMelee, Boolean> longMemoryField;
+    public static ReflectUtil.WrappedField<EntityAIAttackMelee, Double> moveSpeedField;
+
     static {
-        try {
-            MeleeAttackAITaskModifier.longMemory = EntityAIAttackMelee.class.getDeclaredField("field_75437_f");
-            MeleeAttackAITaskModifier.longMemory.setAccessible(true);
-        } catch (NoSuchFieldException | SecurityException exceptionDeobf) {
-            try {
-                MeleeAttackAITaskModifier.longMemory = EntityAIAttackMelee.class.getDeclaredField("longMemory");
-                MeleeAttackAITaskModifier.longMemory.setAccessible(true);
-            } catch (NoSuchFieldException | SecurityException exception) {
-                ESMTweaks.logger.error("Error while attempting to access 'longMemory' field", exception);
-            }
-        }
+        longMemoryField = new ReflectUtil.WrappedField<>(EntityAIAttackMelee.class, "longMemory", "field_75437_f");
+        moveSpeedField = new ReflectUtil.WrappedField<>(ModifierAttackMelee.f_speed);
     }
 
     public static boolean useLongMemory(EntityLiving host, EntityAIBase task) {
-        if(ModConfig.AI.Attack.Melee.forceLongMemory.getValue() == false) {
-            try {
-                ESMTweaks.logger.debug("useLongMemory : " + MeleeAttackAITaskModifier.longMemory.getBoolean(task));
-                return MeleeAttackAITaskModifier.longMemory.getBoolean(task);
-            } catch (IllegalArgumentException | IllegalAccessException exception) {
-                ESMTweaks.logger.warn("Could not change longMemory for " + task.getClass().getSimpleName());
-            }
+        boolean useLongMemory = true;
+        if(task instanceof EntityAIAttackMelee && ModConfig.AI.Attack.Melee.forceLongMemory.getValue() == false) {
+            useLongMemory = longMemoryField.getValue((EntityAIAttackMelee)task, useLongMemory);
         }
-        return true;
+        ESMTweaks.logger.debug("useLongMemory : " + useLongMemory);
+        return useLongMemory;
     }
 
     public static double getmoveSpeed(EntityLiving host, EntityAIBase task) {
-        if(true) {
-            try {
-                return ModifierAttackMelee.f_speed.getDouble(task);
-            } catch (IllegalArgumentException | IllegalAccessException exception) {
-                ESMTweaks.logger.warn("Could not change moveSpeed for " + task.getClass().getSimpleName());
-            }
+        double moveSpeed = 1.0;
+        if(task instanceof EntityAIAttackMelee && true) {
+            moveSpeed = moveSpeedField.getValue((EntityAIAttackMelee)task, moveSpeed);
         }
-        return 1.0;
+        return moveSpeed;
     }
 
     @Override
