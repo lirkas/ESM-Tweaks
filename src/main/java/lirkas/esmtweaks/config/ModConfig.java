@@ -521,7 +521,8 @@ public class ModConfig {
                 static {
                     useMainHandler.getProperty().setRequiresMcRestart(true);
                     useMainHandler.setComment(
-                        "No description."
+                        "Affects various important ESM features.\n" +
+                        "Disabling this may disable a lot of features."
                     );
                 }
 
@@ -551,7 +552,7 @@ public class ModConfig {
                 static {
                     useCreeperHandler.getProperty().setRequiresMcRestart(true);
                     useCreeperHandler.setComment(
-                        "No description."
+                        "Allows changes for Creepers such as the chance to spawn charged and causing fire on explosion."
                     );
                 }
 
@@ -561,7 +562,7 @@ public class ModConfig {
                 static {
                     useEndermanHandler.getProperty().setRequiresMcRestart(true);
                     useEndermanHandler.setComment(
-                        "No description."
+                        "Allows changes for Endermen such as teleporting their target instead of themselves."
                     );
                 }
 
@@ -571,7 +572,7 @@ public class ModConfig {
                 static {
                     useSkeletonHandler.getProperty().setRequiresMcRestart(true);
                     useSkeletonHandler.setComment(
-                        "No description."
+                        "Allows changes for Skeletons such as the chance to spawn as Wither Skeleton and configurable arrow tips."
                     );
                 }
 
@@ -581,7 +582,7 @@ public class ModConfig {
                 static {
                     useSpiderHandler.getProperty().setRequiresMcRestart(true);
                     useSpiderHandler.setComment(
-                        "No description."
+                        "Allows changes for Spiders such as placing webs on hit."
                     );
                 }
 
@@ -591,7 +592,7 @@ public class ModConfig {
                 static {
                     useWitchHandler.getProperty().setRequiresMcRestart(true);
                     useWitchHandler.setComment(
-                        "No description."
+                        "Allows changes for Witches such as configurable thrown potions."
                     );
                 }
 
@@ -601,7 +602,7 @@ public class ModConfig {
                 static {
                     useZombieHandler.getProperty().setRequiresMcRestart(true);
                     useZombieHandler.setComment(
-                        "No description."
+                        "Allows 'infected' players to get turned into zombies on death."
                     );
                 }
             }
@@ -617,7 +618,7 @@ public class ModConfig {
                 static {
                     useSenses.getProperty().setRequiresWorldRestart(true);
                     useSenses.setComment(
-                        "No description."
+                        "Overrides mobs 'Senses' and enables 'XRay Distance' feature."
                     );
                 }
 
@@ -627,7 +628,7 @@ public class ModConfig {
                 static {
                     useNavigator.getProperty().setRequiresWorldRestart(true);
                     useNavigator.setComment(
-                        "No description."
+                        "Overrides mobs 'Navigator', which affects mobs pathing in general."
                     );
                 }
             }
@@ -725,15 +726,15 @@ public class ModConfig {
         configuration.setCategoryLanguageKey(
             Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.configCategory.getName());
         configuration.setCategoryLanguageKey(
-            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.configCategory.getName());
+            Advanced.ESMCore.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.configCategory.getName());
         configuration.setCategoryLanguageKey(
-            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Additions.configCategory.getName());
+            Advanced.ESMCore.Additions.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Additions.configCategory.getName());
         configuration.setCategoryLanguageKey(
-            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Modifiers.configCategory.getName());
+            Advanced.ESMCore.Modifiers.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Modifiers.configCategory.getName());
         configuration.setCategoryLanguageKey(
-            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Handlers.configCategory.getName());
+            Advanced.ESMCore.Handlers.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Handlers.configCategory.getName());
         configuration.setCategoryLanguageKey(
-            Advanced.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Other.configCategory.getName());
+            Advanced.ESMCore.Other.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Advanced.ESMCore.Other.configCategory.getName());
         configuration.setCategoryLanguageKey(
             Debug.CATEGORY_NAME, ConfigProperty.LANG_KEY_PREFIX + ".category." + Debug.configCategory.getName());
     }

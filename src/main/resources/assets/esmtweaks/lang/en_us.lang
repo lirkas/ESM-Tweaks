@@ -8,6 +8,18 @@ lirkas.esmtweaks.config.category.AI.Attack=Attack
 lirkas.esmtweaks.config.category.AI.Attack.tooltip=Options related to Attack AIs.
 lirkas.esmtweaks.config.category.AI.Attack.Melee=Melee Attack
 lirkas.esmtweaks.config.category.AI.Attack.Melee.tooltip=Options related to the Melee Attack AI.
+lirkas.esmtweaks.config.category.Advanced=Advanced Settings
+lirkas.esmtweaks.config.category.Advanced.tooltip=Options for those who know what they are doing.
+lirkas.esmtweaks.config.category.Advanced.ESMCore=ESM Core Features
+lirkas.esmtweaks.config.category.Advanced.ESMCore.tooltip=Enable/Disable ESM native features.\nMay lead to unwanted effects.\nUse with caution.
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Additions=Additions
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Additions.tooltip=Toggles for AI Additions.\nMost of them can already be configured from ESM config file.
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Modifiers=Modifiers
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Modifiers.tooltip=Toggles for AI Modifiers.\nMost of them can already be configured from ESM config file.
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Handlers=Handlers
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Handlers.tooltip=Toggles for features that are not tied to a specific AI.
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Other=Other
+lirkas.esmtweaks.config.category.Advanced.ESMCore.Other.tooltip=Other ESM features.
 lirkas.esmtweaks.config.category.Debug=Debug Settings
 lirkas.esmtweaks.config.category.Debug.tooltip=Options used for testing and debugging.
 
@@ -30,6 +42,38 @@ lirkas.esmtweaks.config.useCustomAttackDelay=Set Custom Attack Delay
 lirkas.esmtweaks.config.forceLongMemory=Force Long Memory
 lirkas.esmtweaks.config.minAttackDelay=Min Attack Delay
 lirkas.esmtweaks.config.maxAttackDelay=Max Attack Delay
+
+lirkas.esmtweaks.config.useAnimalAttack=Animal Attack
+lirkas.esmtweaks.config.useAnimalRetaliate=Animal Retaliate
+lirkas.esmtweaks.config.useAvoidExplosives=Avoid Explosives
+lirkas.esmtweaks.config.useDemolition=Demolition
+lirkas.esmtweaks.config.useDigger=Digging
+lirkas.esmtweaks.config.useGriefing=Griefing
+lirkas.esmtweaks.config.usePillaring=Pillaring
+
+lirkas.esmtweaks.config.useAttackMelee=Melee Attack
+lirkas.esmtweaks.config.useRangedAttack=Ranged Attack
+lirkas.esmtweaks.config.useBowAttack=Bow Attack
+lirkas.esmtweaks.config.useNearestAttackable=Nearest Attackable
+lirkas.esmtweaks.config.useZombieAttack=Zombie Attack
+lirkas.esmtweaks.config.useCreeperSwell=Creeper Swell
+lirkas.esmtweaks.config.useNoPanic=No Panic
+lirkas.esmtweaks.config.useSwimming=Swimming
+lirkas.esmtweaks.config.useAvoidVillager=Avoid Villager
+lirkas.esmtweaks.config.useWander=Wander
+
+lirkas.esmtweaks.config.useMainHandler=Main
+lirkas.esmtweaks.config.useEntityHandler=Entity
+lirkas.esmtweaks.config.usePlayerHandler=Player
+lirkas.esmtweaks.config.useCreeperHandler=Creeper
+lirkas.esmtweaks.config.useEndermanHandler=Enderman
+lirkas.esmtweaks.config.useSkeletonHandler=Skeleton
+lirkas.esmtweaks.config.useSpiderHandler=Spider
+lirkas.esmtweaks.config.useWitchHandler=Witch
+lirkas.esmtweaks.config.useZombieHandler=Zombie
+
+lirkas.esmtweaks.config.useSenses=Senses
+lirkas.esmtweaks.config.useNavigator=Navigator
 
 lirkas.esmtweaks.config.enableDebug=Enable Debug
 lirkas.esmtweaks.config.displayBlockInfoInChat=Show Block Info In Chat
