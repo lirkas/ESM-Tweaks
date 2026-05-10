@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntitySenses;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.EnumHand;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -28,9 +29,11 @@ import lirkas.esmtweaks.util.Util;
 public class EntityEventHandler {
     
     public static ReflectUtil.WrappedField<EntityLiving, EntitySenses> sensesField;
+    public static ReflectUtil.WrappedField<EntityLiving, PathNavigate> navigatorField;
 
     static {
         sensesField = new ReflectUtil.WrappedField<>(EntityLiving.class, "senses", "field_70723_bA");
+        navigatorField = new ReflectUtil.WrappedField<>(EntityLiving.class, "navigator", "field_70699_by");
     }
 
     @SubscribeEvent
@@ -66,14 +69,18 @@ public class EntityEventHandler {
 
         EntityLiving entityLiving = (EntityLiving) event.getEntity();
         EntitySenses senses = entityLiving.getEntitySenses();
+        PathNavigate navigator = entityLiving.getNavigator();
         
         ESMTweaks.logger.trace("onEntityConstruct " + entityLiving.getName());
 
         // should not be called if ESM onEntityConstruct is still registered as a listener
         new MainHandler().onEntityConstruct(event);
 
-        if(ModConfig.AI.General.disableXRay.getValue()) {
+        if(!ModConfig.Advanced.ESMCore.Other.useSenses.getValue() || ModConfig.AI.General.disableXRay.getValue()) {
             sensesField.setValue(entityLiving, senses);
+        }
+        if(!ModConfig.Advanced.ESMCore.Other.useNavigator.getValue()) {
+            navigatorField.setValue(entityLiving, navigator);
         }
         
         ESMTweaks.logger.trace("Tasks : ");
