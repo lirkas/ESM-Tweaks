@@ -134,7 +134,7 @@ public class ModConfig {
             static {
                 canGetExtraTool.setRequiredOptions(useTweakedAI);
                 canGetExtraTool.setComment(
-                    "When enabled, diggings mob may get a chance to obtain a pickaxe when spawned. " +
+                    "When enabled, digging mobs may get a chance to obtain a pickaxe when spawned. " +
                     "Even if this setting is disabled, they can still get one or other items that way " +
                     "from minecraft vanilla behavior or other mods. " +
                     "This setting only gives them 'another chance' to get one."
@@ -147,7 +147,7 @@ public class ModConfig {
             static {
                 extraToolOverride.setRequiredOptions(canGetExtraTool);
                 extraToolOverride.setComment(
-                    "If this is enabled and digging mobs gets the chance " +
+                    "If this is enabled and digging mobs get the chance " +
                     "to receive the pickaxe on spawn, " +
                     "then the pickaxe replaces whatever that mob was holding in its main hand, " +
                     "else the pickaxe is not received and the main hand item is kept."
@@ -193,7 +193,7 @@ public class ModConfig {
                 harvestCheckInterval.setRequiredOptions(useTweakedAI);
                 harvestCheckInterval.setComment(
                     "Defines how often (in ticks) the periodical check to determine if the mob " +
-                    "is still capabale of harvesting the currently mined block is run. " +
+                    "is still capable of harvesting the currently mined block is run. " +
                     "As an example, if a mob were to break its tool while mining a block that requires it, " +
                     "he is going to continue mining it (at reduced speed) for the set time."
                 );

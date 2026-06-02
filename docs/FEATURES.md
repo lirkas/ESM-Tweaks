@@ -19,6 +19,7 @@ Most of them are configurable in-game or from `config/esmtweaks.cfg` file.
 
 ## Other
 - **Block-related infos can be displayed for testing/debugging purposes**
+- **Some ESM native features can be turned off from Advanced Settings**
 
 
 ###### Note: *Most AI changes cannot be configured for each mob individually.*

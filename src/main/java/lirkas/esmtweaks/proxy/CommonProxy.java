@@ -81,6 +81,9 @@ public abstract class CommonProxy implements IProxy {
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
         ESMTweaks.logger.trace("CommonProxy serverAboutToStart");
         
+        this.registerESMAdditions();
+        this.registerESMModifers();
+
         //TODO: remove all redundant calls?
 
         // Digging AI
@@ -90,7 +93,6 @@ public abstract class CommonProxy implements IProxy {
         }
         else {
             AITaskRegistrar.unregisterTasks(DiggingAITaskAddition.class);
-            AITaskRegistrar.registerTask(new AdditionDigger());
         }
 
         // Melee AI
@@ -103,12 +105,7 @@ public abstract class CommonProxy implements IProxy {
         else {
             AITaskRegistrar.unregisterTasks(ZombieAttackAITaskModifier.class);
             AITaskRegistrar.unregisterTasks(MeleeAttackAITaskModifier.class);
-            AITaskRegistrar.registerTask(new ModifierAttackMelee());
-            AITaskRegistrar.registerTask(new ModifierZombieAttack());
         }
-
-        this.registerESMAdditions();
-        this.registerESMModifers();
     }
 
     /**
