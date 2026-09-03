@@ -1,5 +1,6 @@
 package lirkas.esmtweaks;
 
+import lirkas.ESMTweaksConsts;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -20,7 +21,7 @@ import lirkas.esmtweaks.proxy.IProxy;
 public class ESMTweaks {
 
 	public static final String MOD_ID = "esmtweaks";
-	public static final String VERSION = "%VERSION%";
+	public static final String VERSION = ESMTweaksConsts.VERSION;
 	public static final String SERVER_PROXY_CLASSNAME = "lirkas.esmtweaks.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASSNAME = "lirkas.esmtweaks.proxy.ClientProxy";
 	public static final String CONFIG_FACTORY_CLASSNAME = "lirkas.esmtweaks.config.ConfigScreenFactory";
