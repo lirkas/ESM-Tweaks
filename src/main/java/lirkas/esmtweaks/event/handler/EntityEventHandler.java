@@ -83,7 +83,7 @@ public class EntityEventHandler {
         if(!ModConfig.Advanced.ESMCore.Other.useSenses.getValue() || ModConfig.AI.General.disableXRay.getValue()) {
             sensesField.setValue(entityLiving, senses);
         }
-        if(ModConfig.Advanced.ESMCore.Other.useNavigator.getValue()) {
+        if(ModConfig.AI.General.copyNavigatorProperties.getValue() && ModConfig.Advanced.ESMCore.Other.useNavigator.getValue()) {
             // copy over navigator properties missed by the ESM proxy
             PathNavigate newNavigator = entityLiving.getNavigator();
             if (newNavigator instanceof ProxyNavigator) {
