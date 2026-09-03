@@ -1,9 +1,11 @@
 package lirkas.esmtweaks.event.handler;
 
+import funwayguy.epicsiegemod.ai.hooks.ProxyNavigator;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntitySenses;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.EnumHand;
 
@@ -35,6 +37,8 @@ public class EntityEventHandler {
         sensesField = new ReflectUtil.WrappedField<>(EntityLiving.class, "senses", "field_70723_bA");
         navigatorField = new ReflectUtil.WrappedField<>(EntityLiving.class, "navigator", "field_70699_by");
     }
+
+    private final MainHandler delegateHandler = new MainHandler();
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
@@ -74,12 +78,22 @@ public class EntityEventHandler {
         ESMTweaks.logger.trace("onEntityConstruct " + entityLiving.getName());
 
         // should not be called if ESM onEntityConstruct is still registered as a listener
-        new MainHandler().onEntityConstruct(event);
+        delegateHandler.onEntityConstruct(event);
 
         if(!ModConfig.Advanced.ESMCore.Other.useSenses.getValue() || ModConfig.AI.General.disableXRay.getValue()) {
             sensesField.setValue(entityLiving, senses);
         }
-        if(!ModConfig.Advanced.ESMCore.Other.useNavigator.getValue()) {
+        if(ModConfig.AI.General.copyNavigatorProperties.getValue() && ModConfig.Advanced.ESMCore.Other.useNavigator.getValue()) {
+            // copy over navigator properties missed by the ESM proxy
+            PathNavigate newNavigator = entityLiving.getNavigator();
+            if (newNavigator instanceof ProxyNavigator) {
+                ProxyNavigator proxyNavigator = (ProxyNavigator) newNavigator;
+                NodeProcessor oldNodeProcessor = navigator.getNodeProcessor();
+                proxyNavigator.setEnterDoors(oldNodeProcessor.getCanEnterDoors());
+                proxyNavigator.setBreakDoors(oldNodeProcessor.getCanOpenDoors());
+                proxyNavigator.setCanSwim(oldNodeProcessor.getCanSwim());
+            }
+        } else {
             navigatorField.setValue(entityLiving, navigator);
         }
         

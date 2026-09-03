@@ -70,6 +70,17 @@ public class ModConfig {
                     "Takes effect for newly spawned/created entities or on server/world restart."
                 );
             }
+
+            public static ConfigProperty<Boolean> copyNavigatorProperties = new ConfigProperty<Boolean>(
+                "copyNavigatorProperties", CATEGORY_NAME, false
+            );
+            static {
+                copyNavigatorProperties.setComment(
+                    "Ensures that certain mobs original properties (ability to swim or interact with doors) " +
+                    "will be carried over during the entity creation process.\n" +
+                    "Takes effect for newly spawned/created entities or on server/world restart."
+                );
+            }
         }
 
         // Digging AI SubCategory Options
@@ -767,6 +778,7 @@ public class ModConfig {
         propertiesNames = new ArrayList<>();
         propertiesNames.add(AI.General.updateAITaskOnDeath.getName());
         propertiesNames.add(AI.General.disableXRay.getName());
+        propertiesNames.add(AI.General.copyNavigatorProperties.getName());
 
         configuration.setCategoryPropertyOrder(AI.General.CATEGORY_NAME, propertiesNames);
         

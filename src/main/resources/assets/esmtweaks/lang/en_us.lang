@@ -24,6 +24,7 @@ lirkas.esmtweaks.config.category.Debug=Debug Settings
 lirkas.esmtweaks.config.category.Debug.tooltip=Options used for testing and debugging.
 
 lirkas.esmtweaks.config.disableXRay=Disable Xray Vision
+lirkas.esmtweaks.config.copyNavigatorProperties=Preserve Navigation Properties
 
 lirkas.esmtweaks.config.useTweakedAI=Use Tweaked AI
 lirkas.esmtweaks.config.mustHaveCorrectTool=Mob Tool Check
